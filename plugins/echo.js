@@ -7,6 +7,9 @@ var Echo = function() {
 };
 
 
+/*
+ * Echo command.
+ */
 Echo.prototype.echo = function(bot, to, from, msg, callback) {
   bot.say(to, msg);
   callback();
