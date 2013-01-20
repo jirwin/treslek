@@ -47,6 +47,11 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
       matches = msg.match(urlReg),
       bitly;
 
+  if (!matches) {
+    callback();
+    return;
+  }
+
   if (this.bitly && this.bitly.user !== '' && this.bitly.apiKey !== '') {
     bitly = new Bitly(this.bitly.user, this.bitly.apiKey);
   }
