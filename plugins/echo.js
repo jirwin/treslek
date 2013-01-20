@@ -1,4 +1,16 @@
-var Plugin = require('../lib/plugin').Plugin;
+var Plugin = function() {
+  this.commands = ['echo'];
+  this.hooks = ['hook'];
+};
 
+Plugin.prototype.echo = function(bot, to, from, msg, callback) {
+  bot.say(to, msg);
+  callback();
+};
 
-var p = new Plugin('echo', {nick: 'jirwin'});
+Plugin.prototype.hook = function(bot, to, from, msg, callback) {
+  console.log("Echo hook");
+  callback();
+}
+
+exports.Plugin = Plugin;
