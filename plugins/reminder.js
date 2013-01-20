@@ -4,6 +4,9 @@
  */
 var Reminder = function() {
   this.commands = ['remindme'];
+  this.usage = {
+    remindme: 'ex: !remindme <minutes> do laundry. Creates a reminder for X minutes.'
+  }
 };
 
 

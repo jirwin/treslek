@@ -4,6 +4,9 @@
  */
 var Echo = function() {
   this.commands = ['echo'];
+  this.usage = {
+    echo: 'Echoes back any text you send in the command.'
+  };
 };
 
 

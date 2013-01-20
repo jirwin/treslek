@@ -4,6 +4,9 @@
  */
 var Slap = function() {
   this.commands = ['slap'];
+  this.usage = {
+    slap: 'ex: !slap jirwin. Notify a user by hitting them with a fish.'
+  };
 };
 
 

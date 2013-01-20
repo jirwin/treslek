@@ -6,6 +6,11 @@
  */
 var Random = function() {
   this.commands = ['choose', 'dice', 'roll'];
+  this.usage = {
+    choose: 'ex: !choose code, sleep. Chooses randomly between a list of choices.',
+    dice: 'ex: !dice <n>d<x>. Rolls n x-sided dices.',
+    roll: 'ex: !roll <num>. Rolls between 1 and num. num defaults to 100.' 
+  };
 };
 
 

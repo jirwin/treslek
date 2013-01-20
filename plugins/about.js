@@ -4,6 +4,9 @@
  */
 var About = function() {
   this.commands = ['about'];
+  this.usage = {
+    about: 'Displays basic info about the bot.'
+  };
 };
 
 

@@ -7,6 +7,9 @@ var request = require('request');
  */
 var Isup = function() {
   this.commands = ['isup'];
+  this.usage = {
+    isup: 'ex: !isup google.com :Checks is.me to see if a url is up or down.'
+  };
 };
 
 
