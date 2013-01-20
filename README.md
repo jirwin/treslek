@@ -1,3 +1,4 @@
 # treslek
+A node irc bot made to replace doslek.
 
-## yup
+treslek may be freely distributed under th MIT license.
