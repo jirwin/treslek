@@ -15,6 +15,7 @@ var About = function() {
  */
 About.prototype.about = function(bot, to, from, msg, callback) {
   bot.say(to, 'Treslek was written and is maintained by Justin Gallardo <justin.gallardo@gmail.com>');
+  bot.say(to, 'Treslek is available from https://github.com/jirwin/treslek.');
   callback();
 };
 
