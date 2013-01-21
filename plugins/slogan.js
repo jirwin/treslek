@@ -6,6 +6,9 @@ var request = require('request');
  */
 var Slogan = function() {
   this.commands = ['slogan'];
+  this.usage = {
+    slogan: 'ex: !slogan Flying Monkeys. Uses sloganizer to generate a slogan.'
+  };
 };
 
 
