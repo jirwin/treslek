@@ -8,5 +8,6 @@ exports.conf = {
     realName: 'treslek',
     autoConnect: 'false'
   },
+  admins: ['jirwin'],
   plugins_dir: "/home/jirwin/projects/treslek/plugins/"
 }
