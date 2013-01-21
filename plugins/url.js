@@ -30,7 +30,7 @@ var shortenUrl = function(bitly, url, callback) {
       return;
     }
 
-    callback(null, resp.data.url);
+    callback(null, resp.data.url || url);
   });
 };
 
@@ -78,7 +78,7 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
       }
 
       shortenUrl(bitly, url, function(err, shortUrl) {
-        response = title + ' (at ' + shortUrl + ')';
+        response = title + ' | ' + shortUrl;
         bot.say(to, response);
         callback();
       });
