@@ -23,6 +23,11 @@ var Url = function() {
  * Helper function for shortening a url with bitly.
  */
 var shortenUrl = function(bitly, url, callback) {
+  if (!bitly) {
+    callback(null, url);
+    return;
+  }
+
   bitly.shorten(url, function(err, resp) {
     if (err) {
       console.log('Error shortening url', {err: err, url: url});
@@ -76,6 +81,8 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
           title = parsed('title').text();
         }
       }
+
+      title = title || contentType;
 
       shortenUrl(bitly, url, function(err, shortUrl) {
         response = title + ' | ' + shortUrl;
