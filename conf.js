@@ -1,9 +1,9 @@
 exports.conf = {
   nick: 'treslek',
-  host: 'earl.mirwin.net',
+  host: 'irc.freenode.net',
   ircOptions: {
-    port: 5667,
-    channels: ['#treslek'],
+    port: 6667,
+    channels: ['##bullpeen'],
     userName: 'treslek',
     realName: 'treslek',
     autoConnect: 'false'
