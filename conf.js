@@ -8,6 +8,7 @@ exports.conf = {
     realName: 'treslek',
     autoConnect: 'false'
   },
+  ignored: ['doslek'],
   redis: {
     host: 'localhost',
     port: '6379',
