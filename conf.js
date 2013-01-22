@@ -8,6 +8,11 @@ exports.conf = {
     realName: 'treslek',
     autoConnect: 'false'
   },
+  redis: {
+    host: 'localhost',
+    port: '6379',
+    prefix: 'treslek'
+  },
   admins: ['jirwin'],
   plugins_dir: "/home/jirwin/projects/treslek/plugins/"
 }
