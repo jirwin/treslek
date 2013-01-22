@@ -123,9 +123,15 @@ Karma.prototype.low = function(bot, to, from, msg, callback) {
 Karma.prototype.karma = function(bot, to, from, msg, callback) {
   var plus = /\+\+$/i,
       minus = /--$/i,
+      cmd = /^!/i,
       rc = redis.createClient(bot.conf.redis.port, bot.conf.redis.host),
       karmaStore = bot.conf.redis.prefix + ':karma',
       tokens = msg.split(' ');
+
+  if (cmd.test(msg)) {
+    callback();
+    return;
+  }
 
   async.forEach(tokens, function (token) {
     var nick = token.substr(0, token.length - 2);
