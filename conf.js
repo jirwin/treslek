@@ -8,7 +8,7 @@ exports.conf = {
     realName: 'treslek',
     autoConnect: false,
     floodProtection: true,
-    floodProtectionDelay: 500
+    floodProtectionDelay: 100
   },
   ignored: ['doslek'],
   redis: {
