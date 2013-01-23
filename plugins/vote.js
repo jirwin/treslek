@@ -8,8 +8,8 @@ var sprintf = require('sprintf').sprintf;
 var Vote = function() {
   this.commands = ['vote', 'newvote'];
   this.usage = {
-    vote: '',
-    newvote: ''
+    vote: 'Use with no arguments to show the current vote. Pass an argument to vote.',
+    newvote: 'ex: !newvote Favorite Color. Creates a new vote.'
   }
 };
 
@@ -21,51 +21,49 @@ Vote.prototype.vote = function(bot, to, from, msg, callback) {
   var rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
       voteId;
 
-  async.waterfall([
-    function(callback) {
+  async.auto({
+    voteId: function(callback) {
       rc.get(bot.redisConf.prefix + ':vote:id', function(err, reply) {
         callback(err, reply);
       });
     },
 
-    function(voteId, callback) {
-      var voteStore = sprintf('%s:%s:vote', bot.redisConf.prefix, voteId);
-      callback(null, voteStore);
-    },
+    voteStore: ['voteId', function(callback, results) {
+      callback(null, sprintf('%s:%s:vote', bot.redisConf.prefix, results.voteId));
+    }],
 
-    function(voteStore, callback) {
-      rc.get(voteStore + ':topic', function(err, reply) {
-        callback(err, voteStore, reply);
+    voteTopic: ['voteStore', function(callback, results) {
+      rc.get(results.voteStore + ':topic', function(err, reply) {
+        callback(err, reply);
       });
-    },
+    }],
 
-    function(voteStore, voteTopic, callback) {
-      rc.sismember(voteStore + ':voters', from, function(err, reply) {
+    hasVote: ['voteStore', function(callback, results) {
+      rc.sismember(results.voteStore + ':voters', from, function(err, reply) {
         if (reply === '0') {
-          callback(err, voteStore, voteTopic, false);
+          callback(err, false);
         } else {
-          callback(err, voteStore, voteTopic, true);
+          callback(err, true);
         }
       });
-    },
+    }],
 
-    function(voteStore, voteTopic, voter, callback) {
-      rc.get(voteStore + ':voter:' + from, function(err, reply) {
+    vote: ['voteStore', 'hasVote', function(callback, results) {
+      rc.get(results.voteStore + ':voter:' + from, function(err, reply) {
         var vote = false;
 
-        if (voter && reply !== 'null') {
+        if (results.hasVote && reply !== 'null') {
           console.log('got reply');
           vote = reply;
         }
-        console.log('vote: ' + vote);
-        callback(err, voteStore, voteTopic, vote);
+        callback(err, vote);
       });
-    },
+    }],
 
-    function(voteStore, voteTopic, vote, callback) {
+    registerVote: ['voteStore', 'voteTopic', 'vote', function(callback, results) {
       if (msg === '') {
-        bot.say(to, 'Vote: ' + voteTopic);
-        rc.zrevrange(voteStore, 0, -1, 'WITHSCORES', function(err, reply) {
+        bot.say(to, 'Vote: ' + results.voteTopic);
+        rc.zrevrange(results.voteStore, 0, -1, 'WITHSCORES', function(err, reply) {
           var choice = null;
 
           reply.forEach(function(score) {
@@ -82,20 +80,20 @@ Vote.prototype.vote = function(bot, to, from, msg, callback) {
           callback();
         });
       } else {
-        if (vote) {
-          bot.say(to, sprintf('Vote changed from %s to %s.', vote, msg));
-          rc.zincrby(voteStore, -1, vote);
+        if (results.vote) {
+          bot.say(to, sprintf('Vote changed from %s to %s.', results.vote, msg));
+          rc.zincrby(results.voteStore, -1, results.vote);
         } else {
           bot.say(to, 'Vote registered.');
-          rc.sadd(voteStore + ':voters', from);
+          rc.sadd(results.voteStore + ':voters', from);
         }
 
-        rc.set(voteStore + ':voter:' + from, msg);
-        rc.zincrby(voteStore, 1, msg);
+        rc.set(results.voteStore + ':voter:' + from, msg);
+        rc.zincrby(results.voteStore, 1, msg);
         callback();
       }
-    }
-  ],
+    }]
+  },
 
   function(err) {
     if (err) {
