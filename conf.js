@@ -6,7 +6,9 @@ exports.conf = {
     channels: ['##bullpeen'],
     userName: 'treslek',
     realName: 'treslek',
-    autoConnect: 'false'
+    autoConnect: false,
+    floodProtection: true,
+    floodProtectionDelay: 500
   },
   ignored: ['doslek'],
   redis: {
