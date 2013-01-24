@@ -12,9 +12,9 @@ var Spotify = function() {
 };
 
 Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
-  var spotifyReg = /spotify:[a-z0-9]+/gi, 
+  var spotifyReg = /spotify:[a-z0-9:]+/gi, 
     matches = msg.match(spotifyReg);
-
+  
   if (!matches) {
       callback();
       return;
@@ -31,7 +31,7 @@ Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
       }
 
       if (res.statusCode === 200) {
-	data = JSON.parse(res);
+	data = JSON.parse(body);
 	if (data['info']['type'] == 'track') {
 	    var artistNames = [];
 	    data['track']['artists'].forEach(function(art) {
