@@ -1,0 +1,32 @@
+{
+  "name": "treselek",
+  "description": "node.js irc bot",
+  "version": "0.0.1",
+  "author": {
+    "name": "Justin Gallardo"
+  },
+  "contributors": [
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jirwin/treslek.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/jirwin/treslek/master/LICENSE"
+    }
+  ],
+  "bin": "./bin/treselek.js",
+  "private": true,
+  "dependencies": {
+    "async": "0.2.x",
+    "bitly": "1.2.x",
+    "cheerio": "0.10.x",
+    "irc": "0.3.x",
+    "redis": "0.8.2",
+    "request": "2.14.x",
+    "sprintf": "0.1.x",
+    "underscore": "1.4.x"
+  }
+}

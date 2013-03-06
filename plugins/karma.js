@@ -27,6 +27,7 @@ Karma.prototype.score = function(bot, to, from, msg, callback) {
 
   if (msg === '') {
     bot.say(to, 'Please enter a nick.');
+    rc.quit();
     callback();
     return;
   }
@@ -112,9 +113,7 @@ Karma.prototype.low = function(bot, to, from, msg, callback) {
     rc.quit();
     callback();
   });
-  callback();
 };
-
 
 /*
  * Karma hook.
@@ -129,21 +128,38 @@ Karma.prototype.karma = function(bot, to, from, msg, callback) {
       tokens = msg.split(' ');
 
   if (cmd.test(msg)) {
+    rc.quit();
     callback();
     return;
   }
 
-  async.forEach(tokens, function (token) {
+  async.each(tokens, function (token, cb) {
     var nick = token.substr(0, token.length - 2);
+    var incby = 0;
+
+    if (nick === '') {
+      cb(null);
+      return;
+    }
 
     if (plus.test(token)) {
-      rc.zincrby(karmaStore, 1, nick);
+      incby = 1;
     } else if (minus.test(token)) {
-      rc.zincrby(karmaStore, -1, nick);
+      incby = -1;
     }
-  }, function() {
+
+    if (incby == 0) {
+      cb(null);
+      return;
+    }
+
+    rc.zincrby(karmaStore, incby, nick, function(err) {
+      cb(err);
+    });
+
+  }, function(err) {
     rc.quit();
-    callback();
+    callback(err);
   });
 };
 
