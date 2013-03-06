@@ -135,13 +135,14 @@ Vote.prototype.newvote = function(bot, to, from, msg, callback) {
     }
   ],
   function(err) {
+    rc.quit();
+    
     if (err) {
       bot.say(to, 'Error creating vote.');
       callback();
       return;
     }
 
-    rc.quit();
     callback();
   });
 };
