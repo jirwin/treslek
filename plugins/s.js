@@ -26,7 +26,6 @@ function parseCommand(bot, to, text, callback) {
 
   if (cmd.length !== 4) {
     console.log('Invalid s syntax.', text);
-    bot.say(to, 'Invalid syntax.');
     callback(null, false);
     return;
   }
