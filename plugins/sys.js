@@ -84,7 +84,7 @@ Sys.prototype.uptime = function(bot, to, from, msg, callback) {
  * figlet command.
  */
 Sys.prototype.figlet = function(bot, to, from, msg, callback) {
-  var fig = cp.spawn('figlet', ['-f', 'ghoulish', '-w', '62', msg]);
+  var fig = cp.spawn('figlet', ['-f', 'ascii12', '-w', '62', msg]);
 
   fig.stdout.on('data', function(data) {
     bot.say(to, data);
