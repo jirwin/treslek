@@ -8,7 +8,7 @@ var sprintf = require('sprintf').sprintf;
 var Vote = function() {
   this.commands = ['vote', 'newvote'];
   this.usage = {
-    vote: 'Use with no arguments to show the current vote. Pass an argument to vote.',
+    vote: 'Use with no arguments to show the current vote. Pass an argument to vote. Use !newvote to create a new vote.',
     newvote: 'ex: !newvote Favorite Color. Creates a new vote.'
   }
 };
