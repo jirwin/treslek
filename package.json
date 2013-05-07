@@ -27,6 +27,7 @@
     "redis": "0.8.2",
     "request": "2.14.x",
     "sprintf": "0.1.x",
-    "underscore": "1.4.x"
+    "underscore": "1.4.x",
+    "argsparser": "0.0.x"
   }
 }
