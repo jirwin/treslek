@@ -8,7 +8,12 @@ var sprintf = require('sprintf').sprintf;
 var Topic = function () {
   this.commands = ['topic'];
   this.usage = {
-    topic: 'Sets the channel topic.'
+    topic: [
+      'Sets the channel topic to the specified text.',
+      'If nothing is specified, choose a random saved topic.',
+      '--add: Saves and sets the topic.',
+      '--append: Appends a slug to the topic.'
+    ]
   };
 };
 

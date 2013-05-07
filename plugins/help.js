@@ -1,3 +1,5 @@
+var async = require('async');
+
 /*
  * Help plugin
  *  - help: Displays available commands and their usage
@@ -22,7 +24,11 @@ Help.prototype.help = function(bot, to, from, msg, callback) {
   } else if (bot.usage.hasOwnProperty(msg) && bot.usage[msg] === '') {
     response = "I don't have help information for " + msg;
   } else if (bot.usage.hasOwnProperty(msg)) {
-    response = bot.usage[msg];
+    response = bot.usage[msg] instanceof Array ? bot.usage[msg] : [bot.usage[msg]];
+    async.each(response, function(item, callback) {
+      bot.say(to, item);
+    }, callback);
+    return;
   } else {
     response = "I don't know about the command: " + msg;
   }
