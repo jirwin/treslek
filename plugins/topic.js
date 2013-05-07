@@ -38,7 +38,7 @@ Topic.prototype.topic = function(bot, to, from, msg, callback) {
 
         async.waterfall([
           function create(callback) {
-            rc.set(topicStore, addTopic);
+            rc.set(topicStore, addTopic.join(' '));
             callback();
           },
 
