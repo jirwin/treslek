@@ -65,7 +65,7 @@ Topic.prototype.topic = function(bot, to, from, msg, callback) {
     async.waterfall([
       bot.getTopic.bind(null, to),
       function(topic, callback) {
-        bot.topic(to, sprintf('%s %s %s %s', topicPrefix, separator, topic, appendTopic.join(' ')));
+        bot.topic(to, sprintf('%s %s', topic, appendTopic.join(' ')));
       }
     ], callback);
   } else {
