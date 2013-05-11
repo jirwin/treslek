@@ -9,7 +9,11 @@ var sprintf = require('sprintf').sprintf;
 var Substitute = function() {
   this.hooks = ['s'];
   this.usage = {
-    s: 'Does fancy things'
+    s: [
+      'Makes text replacments. Example: !s/red/blue/gm',
+      'Syntax: !s/<search>/<replace>/<options>',
+      'Options: g: global replace, m: look at what others have said when searching, i: case insensitive'
+    ]
   };
 };
 
@@ -55,7 +59,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
       var cmd = results.processCmd,
           user = from;
 
-      if (cmd.options && cmd.options.indexOf('g') !== -1) {
+      if (cmd.options && cmd.options.indexOf('m') !== -1) {
         user = null;
       }
 
@@ -66,7 +70,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
 
     'matchLog': ['getLogs', function(callback, results) {
       var cmd = results.processCmd,
-          caseSensitive = true,
+          options = [],
           matchedLog,
           logs = results.getLogs;
 
@@ -77,10 +81,14 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
       }
 
       if (cmd.options && cmd.options.indexOf('i') !== -1) {
-        caseSensitive = false;
+        options.push('i');
       }
 
-      match = new RegExp(cmd.match, caseSensitive ? '' : 'i');
+      if (cmd.options && cmd.options.indexOf('g') !== -1) {
+        options.push('g');
+      }
+
+      match = new RegExp(cmd.match, options.join(''));
 
       for (var i = 0; i < logs.length - 1; i++) {
         if (logs[i].from === bot.config.nick) {
