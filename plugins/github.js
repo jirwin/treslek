@@ -18,4 +18,4 @@ Github.prototype.listen = function(bot) {
   redisClient.psubscribe(pattern);
 };
 
-export.Plugin = Github;
+exports.Plugin = Github;
