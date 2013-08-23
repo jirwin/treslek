@@ -1,12 +1,12 @@
 var path = require('path');
 
 exports.conf = {
-  nick: 'treslek',
-  host: 'localhost',
+  nick: 'treslekbot',
+  host: 'irc.freenode.net',
   ircOptions: {
     port: 6667,
-    channels: ['#treslek'],
-    userName: 'treselekbot',
+    channels: ['##treslek'],
+    userName: 'treslekbot',
     realName: 'treslekbot',
     autoConnect: false,
     floodProtection: true,
@@ -21,7 +21,7 @@ exports.conf = {
   topics: {
     separator: '::',
     prefixes: {
-      '#treslek': 'Treslek'
+      '##treslek': 'Treslek'
     }
   },
   admins: ['jirwin', 'morgabra'],
