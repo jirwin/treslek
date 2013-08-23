@@ -29,6 +29,11 @@ exports.conf = {
     port: '1304',
     channelKey: 'webhookChannels'
   },
+  github: {
+    channels: {
+      treslek: '##treslek'
+    }
+  },
   admins: ['jirwin', 'morgabra'],
   plugins_dir: path.resolve(__dirname, "plugins")
 }
