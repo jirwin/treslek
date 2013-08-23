@@ -25,7 +25,9 @@ exports.conf = {
     }
   },
   webhook: {
-    port: '1304'
+    host: '0.0.0.0',
+    port: '1304',
+    channelKey: 'webhookChannels'
   },
   admins: ['jirwin', 'morgabra'],
   plugins_dir: path.resolve(__dirname, "plugins")
