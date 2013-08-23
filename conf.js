@@ -24,6 +24,9 @@ exports.conf = {
       '##treslek': 'Treslek'
     }
   },
+  webhook: {
+    port: '1304'
+  },
   admins: ['jirwin', 'morgabra'],
   plugins_dir: path.resolve(__dirname, "plugins")
 }
