@@ -8,7 +8,7 @@ var request = require('request');
 var Isup = function() {
   this.commands = ['isup'];
   this.usage = {
-    isup: 'ex: !isup google.com :Checks is.me to see if a url is up or down.'
+    isup: 'ex: !isup google.com :Checks isup.me to see if a url is up or down.'
   };
 };
 
@@ -42,7 +42,7 @@ Isup.prototype.isup = function(bot, to, from, msg, callback) {
       } else if (body.search('down from here') !== -1) {
         response = "Oh no! " + msg + " is broken.";
       }
-      
+
       bot.say(to, response);
       callback();
     }
