@@ -5,8 +5,7 @@
   "author": {
     "name": "Justin Gallardo"
   },
-  "contributors": [
-  ],
+  "contributors": [],
   "repository": {
     "type": "git",
     "url": "git://github.com/jirwin/treslek.git"
@@ -28,6 +27,7 @@
     "request": "2.14.x",
     "sprintf": "0.1.x",
     "underscore": "1.4.x",
-    "argsparser": "0.0.x"
+    "argsparser": "0.0.x",
+    "moment": "~2.2.1"
   }
 }
