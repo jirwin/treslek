@@ -68,7 +68,7 @@ TV.prototype.nextep = function(bot, to, from, msg, callback) {
       epInfo[line[0]] = line[1];
     });
 
-    if (Object.keys(epInfo).length === 0) {
+    if (Object.keys(epInfo).length === 0 || !epInfo.hasOwnProperty('Latest Episode')) {
       bot.say(to, 'Unable to retrieve episode information for ' + msg);
       callback();
       return;
