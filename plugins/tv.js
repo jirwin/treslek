@@ -34,7 +34,7 @@ function parseDate(dateString) {
     return sprintf('Yesterday! (%s)', standard)
   } else if (days < -1 && days >= -7) {
     return sprintf('Last %s (%s)', date.format('dddd'), standard);
-  } else if (days <= 7) {
+  } else if (days <= 7 && days > 0) {
     return sprintf('Next %s (%s)', date.format('dddd'), standard);
   }
 
@@ -77,22 +77,22 @@ TV.prototype.nextep = function(bot, to, from, msg, callback) {
     if (epInfo['Status'] === 'Returning Series' ) {
       if (epInfo.hasOwnProperty('Next Episode')) {
         epDetails = epInfo['Next Episode'].split('^');
-        outMsg = sprintf("%s's next episode is: %s - %s - %s",
+        outMsg = sprintf("%s's next episode '%s - %s' airs %s.",
                          epInfo['Show Name'],
                          epDetails[0],
                          epDetails[1],
                          parseDate(epDetails[2]));
       } else {
-        epDetails = epInfo['Latest Episode'];
-        outMsg = sprintf("%s hasn't scheduled the next episode yet. The last episode was: %s - %s - %s",
+        epDetails = epInfo['Latest Episode'].split('^');
+        outMsg = sprintf("%s hasn't scheduled the next episode yet. The last episode '%s - %s' aired %s.",
                          epInfo['Show Name'],
                          epDetails[0],
                          epDetails[1],
                          parseDate(epDetails[2]));
       }
     } else {
-      epDetails = epInfo['Latest Episode'];
-      outMsg = sprintf("%s isn't on any more. The last episode was: %s - %s - %s",
+      epDetails = epInfo['Latest Episode'].split('^');
+      outMsg = sprintf("%s isn't on any more. The last episode '%s - %s' aired %s.",
                        epInfo['Show Name'],
                        epDetails[0],
                        epDetails[1],
