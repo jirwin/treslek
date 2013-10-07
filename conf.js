@@ -26,7 +26,7 @@ exports.conf = {
   },
   webhook: {
     host: '0.0.0.0',
-    port: '1304',
+    port: '13041',
     channelKey: 'webhookChannels'
   },
   github: {

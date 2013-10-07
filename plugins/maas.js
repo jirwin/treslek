@@ -9,6 +9,8 @@ Maas.prototype.listen = function(bot) {
   var redisClient = redis.createClient(bot.redisConf.port, bot.redisConf.host),
       pattern = [bot.redisConf.prefix, 'cm/*'].join(':');
 
+  console.log(pattern);
+
   redisClient.on('message', function(channel, message) {
     var realChannel = channel.slice(bot.redisConf.prefix.length - 1).split('/'),
         ircChannel = bot.config.cm[realChannel];
