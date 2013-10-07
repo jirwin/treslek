@@ -13,6 +13,9 @@ Maas.prototype.listen = function(bot) {
     var realChannel = channel.slice(bot.redisConf.prefix.length - 1).split('/'),
         ircChannel = bot.config.cm[realChannel];
 
+    console.log(realChannel);
+    console.log(ircChannel);
+
     bot.say(realChannel, 'I got a message from cm');
   });
   redisClient.psubscribe(pattern);
