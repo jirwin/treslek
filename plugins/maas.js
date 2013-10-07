@@ -1,21 +1,21 @@
 var redis = require('redis');
 
 
-var Github = function() {
+var Maas = function() {
   this.auto = ['listen'];
 };
 
-Github.prototype.listen = function(bot) {
+Maas.prototype.listen = function(bot) {
   var redisClient = redis.createClient(bot.redisConf.port, bot.redisConf.host),
-      pattern = [bot.redisConf.prefix, 'github/*'].join(':');
+      pattern = [bot.redisConf.prefix, 'cm/*'].join(':');
 
   redisClient.on('message', function(channel, message) {
     var realChannel = channel.slice(bot.redisConf.prefix.length - 1).split('/'),
-        ircChannel = bot.config.github[realChannel];
+        ircChannel = bot.config.cm[realChannel];
 
-    bot.say(realChannel, 'I got a message from github.');
+    bot.say(realChannel, 'I got a message from cm');
   });
   redisClient.psubscribe(pattern);
 };
 
-exports.Plugin = Github;
+exports.Plugin = Maas;
