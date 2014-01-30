@@ -15,7 +15,6 @@ var DOGE = function () {
 };
 
 
-
 /* Vicurex 1 / value
  * https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE
  *  1 / value
@@ -100,13 +99,13 @@ var CRYPTSY = function (callback) {
 DOGE.prototype.doge = function (bot, to, from, msg, callback) {
     var msgOut = '';
     async.parallel([CRYPTSY, COINEX, VICUREX], function (err, results) {
-       msgOut += "DOGE: ";
-       results.forEach(function (each) {
-           msgOut += each[0] + ": " + each[1] + " "
-       });
+        msgOut += "DOGE: ";
+        results.forEach(function (each) {
+            msgOut += each[0] + ": " + each[1] + " "
+        });
 
-       bot.say(to, msgOut);
-       callback();
+        bot.say(to, msgOut);
+        callback();
     });
 };
 
