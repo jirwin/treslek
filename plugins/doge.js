@@ -22,7 +22,7 @@ DOGE.prototype.doge = function (bot, to, from, msg, callback) {
     url = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132';
     request(url, function (err, res, body) {
         if (!body) {
-            bot.say(to, 'Unable to retreive DOGE price');
+            bot.say(to, 'Unable to retrieve DOGE price');
             callback();
             return;
         }
