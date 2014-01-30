@@ -27,12 +27,16 @@ DOGE.prototype.doge = function (bot, to, from, msg, callback) {
             return;
         }
 
-        data = JSON.parse(body);
-        msgOut = sprintf(
-            'Cryptsy price: %s %s',
-            data.return.markets.DOGE.lasttradeprice,
-            data.return.markets.DOGE.label
-        );
+        try {
+            data = JSON.parse(body);
+            msgOut = sprintf(
+                'Cryptsy price: %s %s',
+                data.return.markets.DOGE.lasttradeprice,
+                data.return.markets.DOGE.label
+            );
+        } catch (err) {
+            msgOut = 'Response very confuse';
+        }
 
         bot.say(to, msgOut);
         callback();
