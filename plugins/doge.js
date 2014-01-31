@@ -8,9 +8,10 @@ var async = require('async');
  */
 
 var DOGE = function () {
-    this.commands = ['doge', 'dc'];
+    this.commands = ['doge', 'btc', 'dc'];
     this.usage = {
         doge: 'ex : !doge . Gets market prices for DOGE',
+        btc: 'ex : !btc . Gets market prices for BTC',
         dc: 'ex : !dc <amount>. Convert DOGE to USD, default 1000'
     };
 };
@@ -139,8 +140,21 @@ var COINBASE = function (callback) {
 
 DOGE.prototype.doge = function (bot, to, from, msg, callback) {
     var msgOut = '';
-    async.parallel([CRYPTSY, COINEX, VICUREX, COINBASE], function(err, results) {
+    async.parallel([CRYPTSY, COINEX, VICUREX], function(err, results) {
         msgOut += "DOGE: ";
+        results.forEach(function (each) {
+            msgOut += each.label + ": " + each.value + " "
+        });
+
+        bot.say(to, msgOut);
+        callback();
+    });
+};
+
+DOGE.prototype.btc = function (bot, to, from, msg, callback) {
+    var msgOut = '';
+    async.parallel([MTGOX, COINBASE], function(err, results) {
+        msgOut += "BTC: ";
         results.forEach(function (each) {
             msgOut += each.label + ": " + each.value + " "
         });
@@ -154,7 +168,7 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
 {
     var msgOut = '',
         amount = 1000,
-        raw = msg.replace(',','');
+        raw = msg.replace(',', '');
 
     if (!(raw === '') && !isNaN(raw))
     {
@@ -165,7 +179,7 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
         if (isNaN(results[0].value)) {
             msgOut = 'Cannot do conversion at this moment.';
         } else {
-            msgOut = amount + ' DOGE is $' + ((amount * results[0].value) * results[1].value).toPrecision(5);
+            msgOut = 'Đ' + amount + ' is $' + ((amount * results[0].value) * results[1].value).toFixed();
         }
         bot.say(to, msgOut);
         callback();
