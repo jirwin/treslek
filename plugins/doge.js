@@ -8,9 +8,10 @@ var async = require('async');
  */
 
 var DOGE = function () {
-    this.commands = ['doge'];
+    this.commands = ['doge', 'dc'];
     this.usage = {
-        doge: 'ex : !doge . Gets market prices for DOGE'
+        doge: 'ex : !doge . Gets market prices for DOGE',
+        cconv: 'ex : !dc <amount>. Convert DOGE to USD, default 1000'
     };
 };
 
@@ -20,22 +21,22 @@ var DOGE = function () {
  *  1 / value
  */
 var VICUREX = function (callback) {
-    var url = 'https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE';
-    var label = 'Vicurex';
-    var value;
+    var url = 'https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE',
+        retObj = new Object();
+    retObj.label = 'Vicurex';
 
-    request(url, function (err, res, body) {
+    request(url, function(err, res, body) {
         if (!body) {
-            value = 'such no body';
+            retObj.value = 'such no body';
         } else {
             try {
                 data = JSON.parse(body);
-                value = (1 / data.value).toPrecision(3);
+                retObj.value = (1 / data.value).toPrecision(3);
             } catch (err) {
-                value = 'Response very confuse';
+                retObj.value = 'very confuse';
             }
         }
-        callback(null, [label, value]);
+        callback(null, retObj);
     });
 };
 
@@ -45,26 +46,26 @@ var VICUREX = function (callback) {
  * last_price / 100000000
  */
 var COINEX = function (callback) {
-    var url = 'https://coinex.pw/api/v2/trade_pairs';
-    var label = 'Coinex';
-    var value;
+    var url = 'https://coinex.pw/api/v2/trade_pairs',
+        retObj = new Object();
+    retObj.label = 'Coinex';
 
-    request(url, function (err, res, body) {
+    request(url, function(err, res, body) {
         if (!body) {
-            value = 'such no body';
+            retObj.value = 'such no body';
         } else {
             try {
                 data = JSON.parse(body);
-                data.trade_pairs.forEach(function (each) {
+                data.trade_pairs.forEach(function(each) {
                     if (each.id == 46) {
-                        value = each.last_price / 100000000;
+                        retObj.value = each.last_price / 100000000;
                     }
                 });
             } catch (err) {
-                value = 'Response very confuse';
+                retObj.value = 'very confuse';
             }
         }
-        callback(null, [label, value]);
+        callback(null, retObj);
     });
 };
 
@@ -73,22 +74,62 @@ var COINEX = function (callback) {
  *
  */
 var CRYPTSY = function (callback) {
-    var url = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132';
-    var label = 'Cryptsy';
-    var value;
+    var url = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132',
+        retObj = new Object();
+    retObj.label = 'Cryptsy';
 
-    request(url, function (err, res, body) {
+    request(url, function(err, res, body) {
         if (!body) {
-            value = 'such no body';
+            retObj.value = 'such no body';
         } else {
             try {
                 data = JSON.parse(body);
-                value = data.return.markets.DOGE.lasttradeprice;
+                retObj.value = data.return.markets.DOGE.lasttradeprice;
             } catch (err) {
-                value = 'Response very confuse';
+                retObj.value = 'very confuse';
             }
         }
-        callback(null, [label, value]);
+        callback(null, retObj);
+    });
+};
+
+var MTGOX = function (callback) {
+    var url = 'http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast',
+        retObj = new Object();
+    retObj.label = 'MtGox';
+
+    request(url, function(err, res, body) {
+        if (!body) {
+            retObj.value = 'such no body';
+        } else {
+            try {
+                data = JSON.parse(body);
+                retObj.value = data.data.sell.value;
+            } catch (err) {
+                retObj.value = 'very confuse';
+            }
+        }
+        callback(null, retObj);
+    });
+};
+
+var COINBASE = function (callback) {
+    var url = 'https://coinbase.com/api/v1/prices/sell',
+        retObj = new Object();
+    retObj.label = 'Coinbase';
+
+    request(url, function(err, res, body) {
+        if (!body) {
+            retObj.value = 'such no body';
+        } else {
+            try {
+                data = JSON.parse(body);
+                retObj.value = data.amount;
+            } catch (err) {
+                retObj.value = 'very confuse';
+            }
+        }
+        callback(null, retObj);
     });
 };
 
@@ -98,12 +139,34 @@ var CRYPTSY = function (callback) {
 
 DOGE.prototype.doge = function (bot, to, from, msg, callback) {
     var msgOut = '';
-    async.parallel([CRYPTSY, COINEX, VICUREX], function (err, results) {
+    async.parallel([CRYPTSY, COINEX, VICUREX, COINBASE], function(err, results) {
         msgOut += "DOGE: ";
         results.forEach(function (each) {
-            msgOut += each[0] + ": " + each[1] + " "
+            msgOut += each.label + ": " + each.value + " "
         });
 
+        bot.say(to, msgOut);
+        callback();
+    });
+};
+
+DOGE.prototype.dc = function (bot, to, from, msg, callback)
+{
+    var msgOut = '',
+        amount = 1000,
+        raw = msg.replace(',','');
+
+    if (!(raw === '') && !isNaN(raw))
+    {
+        amount = parseFloat(raw);
+    }
+
+    async.parallel([CRYPTSY, COINBASE], function(err, results) {
+        if (isNaN(results[0].value)) {
+            msgOut = 'Cannot do conversion at this moment.';
+        } else {
+            msgOut = amount + ' DOGE is $' + ((amount * results[0].value) * results[1].value).toPrecision(5);
+        }
         bot.say(to, msgOut);
         callback();
     });
