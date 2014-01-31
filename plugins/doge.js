@@ -22,7 +22,7 @@ var DOGE = function () {
  */
 var VICUREX = function (callback) {
     var url = 'https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE',
-        retObj = new Object();
+        retObj = {};
     retObj.label = 'Vicurex';
 
     request(url, function(err, res, body) {
@@ -47,7 +47,7 @@ var VICUREX = function (callback) {
  */
 var COINEX = function (callback) {
     var url = 'https://coinex.pw/api/v2/trade_pairs',
-        retObj = new Object();
+        retObj = {};
     retObj.label = 'Coinex';
 
     request(url, function(err, res, body) {
@@ -57,7 +57,7 @@ var COINEX = function (callback) {
             try {
                 data = JSON.parse(body);
                 data.trade_pairs.forEach(function(each) {
-                    if (each.id == 46) {
+                    if (each.id === 46) {
                         retObj.value = each.last_price / 100000000;
                     }
                 });
@@ -75,7 +75,7 @@ var COINEX = function (callback) {
  */
 var CRYPTSY = function (callback) {
     var url = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132',
-        retObj = new Object();
+        retObj = {};
     retObj.label = 'Cryptsy';
 
     request(url, function(err, res, body) {
@@ -95,7 +95,7 @@ var CRYPTSY = function (callback) {
 
 var MTGOX = function (callback) {
     var url = 'http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast',
-        retObj = new Object();
+        retObj = {};
     retObj.label = 'MtGox';
 
     request(url, function(err, res, body) {
@@ -115,7 +115,7 @@ var MTGOX = function (callback) {
 
 var COINBASE = function (callback) {
     var url = 'https://coinbase.com/api/v1/prices/sell',
-        retObj = new Object();
+        retObj = {};
     retObj.label = 'Coinbase';
 
     request(url, function(err, res, body) {
