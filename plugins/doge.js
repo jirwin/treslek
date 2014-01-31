@@ -11,7 +11,7 @@ var DOGE = function () {
     this.commands = ['doge', 'dc'];
     this.usage = {
         doge: 'ex : !doge . Gets market prices for DOGE',
-        cconv: 'ex : !dc <amount>. Convert DOGE to USD, default 1000'
+        dc: 'ex : !dc <amount>. Convert DOGE to USD, default 1000'
     };
 };
 
