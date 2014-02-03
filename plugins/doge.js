@@ -32,8 +32,8 @@ var VICUREX = function (callback) {
         } else {
             try {
                 data = JSON.parse(body);
-                retObj.value = (1 / data.value).toPrecision(3);
-            } catch (err) {
+                retObj.value = (1 / data.value) * 100000000;
+            } catch (exception) {
                 retObj.value = 'very confuse';
             }
         }
@@ -59,10 +59,10 @@ var COINEX = function (callback) {
                 data = JSON.parse(body);
                 data.trade_pairs.forEach(function(each) {
                     if (each.id === 46) {
-                        retObj.value = each.last_price / 100000000;
+                        retObj.value = each.last_price;
                     }
                 });
-            } catch (err) {
+            } catch (exception) {
                 retObj.value = 'very confuse';
             }
         }
@@ -85,8 +85,8 @@ var CRYPTSY = function (callback) {
         } else {
             try {
                 data = JSON.parse(body);
-                retObj.value = data.return.markets.DOGE.lasttradeprice;
-            } catch (err) {
+                retObj.value = data.return.markets.DOGE.lasttradeprice * 100000000;
+            } catch (exception) {
                 retObj.value = 'very confuse';
             }
         }
@@ -106,7 +106,7 @@ var MTGOX = function (callback) {
             try {
                 data = JSON.parse(body);
                 retObj.value = data.data.sell.value;
-            } catch (err) {
+            } catch (exception) {
                 retObj.value = 'very confuse';
             }
         }
@@ -126,7 +126,7 @@ var COINBASE = function (callback) {
             try {
                 data = JSON.parse(body);
                 retObj.value = data.amount;
-            } catch (err) {
+            } catch (exception) {
                 retObj.value = 'very confuse';
             }
         }
@@ -143,7 +143,7 @@ DOGE.prototype.doge = function (bot, to, from, msg, callback) {
     async.parallel([CRYPTSY, COINEX, VICUREX], function(err, results) {
         msgOut += "DOGE: ";
         results.forEach(function (each) {
-            msgOut += each.label + ": " + each.value + " "
+            msgOut += each.label + ": " + each.value + " ";
         });
 
         bot.say(to, msgOut);
@@ -156,7 +156,7 @@ DOGE.prototype.btc = function (bot, to, from, msg, callback) {
     async.parallel([MTGOX, COINBASE], function(err, results) {
         msgOut += "BTC: ";
         results.forEach(function (each) {
-            msgOut += each.label + ": " + each.value + " "
+            msgOut += each.label + ": " + each.value + " ";
         });
 
         bot.say(to, msgOut);
@@ -170,7 +170,7 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
         amount = 1000,
         raw = msg.replace(',', '');
 
-    if (!(raw === '') && !isNaN(raw))
+    if ((raw !== '') && !isNaN(raw))
     {
         amount = parseFloat(raw);
     }
