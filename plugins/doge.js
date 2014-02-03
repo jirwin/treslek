@@ -179,7 +179,7 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
         if (isNaN(results[0].value)) {
             msgOut = 'Cannot do conversion at this moment.';
         } else {
-            msgOut = 'Đ' + amount + ' is $' + ((amount * results[0].value) * results[1].value).toFixed(2);
+            msgOut = 'Đ' + amount + ' is $' + ((amount * results[0].value) * results[1].value / 100000000).toFixed(2);
         }
         bot.say(to, msgOut);
         callback();
