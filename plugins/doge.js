@@ -32,7 +32,7 @@ var VICUREX = function (callback) {
         } else {
             try {
                 data = JSON.parse(body);
-                retObj.value = (1 / data.value) * 100000000;
+                retObj.value = Math.floor((1 / data.value) * 100000000);
             } catch (exception) {
                 retObj.value = 'very confuse';
             }
