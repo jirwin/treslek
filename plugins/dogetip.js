@@ -198,7 +198,7 @@ DogeTip.prototype.getaddress = function(bot, to, from, args) {
             console.log(err);
             bot.say(to, from + ": Error fetching address.");
         } else {
-            bot.say(to, from + ": " + nick +"'s address is " + result);
+            bot.say(to, from + ": Your address is " + result);
         }
     });
 };
@@ -222,7 +222,7 @@ DogeTip.prototype.getbalance = function(bot, to, from, args) {
         if (err) {
             bot.say(to, from + ": Error fetching balance.");
         } else {
-            bot.say(to, from + ": " + nick + "'s balance is " + result);
+            bot.say(to, from + ": Your balance is " + result);
         }
     });
 
