@@ -1,13 +1,13 @@
 var path = require('path');
 
 exports.conf = {
-  nick: 'treslekbot',
+  nick: 'dogetipbot-test',
   host: 'irc.freenode.net',
   ircOptions: {
     port: 6667,
-    channels: ['##treslek'],
-    userName: 'treslekbot',
-    realName: 'treslekbot',
+    channels: ['##dogetipbot-test'],
+    userName: 'dogetipbot-test',
+    realName: 'dogetipbot-test',
     autoConnect: false,
     floodProtection: true,
     floodProtectionDelay: 100
@@ -21,7 +21,7 @@ exports.conf = {
   topics: {
     separator: '::',
     prefixes: {
-      '##treslek': 'Treslek'
+      '##dogetipbot-test': 'dogetipbot-test'
     }
   },
   webhook: {
@@ -31,9 +31,17 @@ exports.conf = {
   },
   github: {
     channels: {
-      treslek: '##treslek'
+      treslek: '##dogetipbot-test'
     }
   },
   admins: ['jirwin', 'morgabra'],
-  plugins_dir: path.resolve(__dirname, "plugins")
-}
+  plugins_dir: path.resolve(__dirname, "plugins"),
+  plugins_conf: {
+    dogetip: {
+      url: 'http://doge:22555/',
+      rpcuser: 'dogecoinrpc',
+      rpcpassword: '679npvT5w8MiGs9T178sj2y23Cro4DLixQH3L9UtM5Un',
+      admins: ['morgabra']
+    }
+  }
+};
