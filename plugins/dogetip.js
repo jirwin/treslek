@@ -98,13 +98,13 @@ DogeClient.prototype.getinfo = function (callback) {
 };
 
 var DogeTip = function () {
-    this.commands = ['dogetip'];
+    this.commands = ['dt'];
     this.usage = {
-        dogetip: 'ex : !dogetip [tip <nick> <amt>] [send <address> <amd>] [address] [balance]'
+        dt: 'ex : !dt [tip <nick> <amt>] [sendto <address> <amd>] [address] [balance]'
     };
 };
 
-DogeTip.prototype.dogetip = function (bot, to, from, msg, callback) {
+DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
 
     var command, args;
 
@@ -260,7 +260,7 @@ DogeTip.prototype.tip = function(bot, to, from, args) {
                            if (err) {
                                bot.say(to, sprintf('%s: Error tipping doge', from));
                            } else {
-                               bot.say(to, sprintf('%s: Tipped %s from %s (%s) to %s (%s)', from, tipAmt, from, results[0], tipTo, results[2]));
+                               bot.say(to, sprintf('%s: Tipped %s from %s to %s', from, tipAmt, from, tipTo));
                            }
                        });
                    }
