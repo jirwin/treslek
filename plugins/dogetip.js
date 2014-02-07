@@ -198,7 +198,7 @@ DogeTip.prototype.getaddress = function(bot, to, from, args) {
             console.log(err);
             bot.say(to, from + ": Error fetching address.");
         } else {
-            bot.say(to, from + ": Your address is " + result);
+            bot.say(to, from + ": " + result);
         }
     });
 };
@@ -222,7 +222,7 @@ DogeTip.prototype.getbalance = function(bot, to, from, args) {
         if (err) {
             bot.say(to, from + ": Error fetching balance.");
         } else {
-            bot.say(to, from + ": Your balance is " + result);
+            bot.say(to, from + ": Đ" + result);
         }
     });
 
@@ -238,7 +238,7 @@ DogeTip.prototype.tip = function(bot, to, from, args) {
     tipAmt = parseFloat(args[1]);
 
     if (!this._isValidAmount(tipAmt)) {
-        bot.say(to, from + ': Very confuse with tip ' + tipamt + '?');
+        bot.say(to, from + ': Very confuse with tip ' + tipAmt + '?');
         return;
     }
 
@@ -264,7 +264,7 @@ DogeTip.prototype.tip = function(bot, to, from, args) {
                            if (err) {
                                bot.say(to, sprintf('%s: Error tipping doge', from));
                            } else {
-                               bot.say(to, sprintf('%s: Tipped %s from %s to %s', from, tipAmt, from, tipTo));
+                               bot.say(to, sprintf('%s: Tipped Đ%s to %s', from, tipAmt, tipTo));
                            }
                        });
                    }
@@ -311,7 +311,7 @@ DogeTip.prototype.move = function(bot, to, from, args) {
                 if (err) {
                     bot.say(to, sprintf('%s: Error moving doge', from));
                 } else {
-                    bot.say(to, sprintf('%s: Moved %s from %s (%s) to %s (%s)', from, moveAmt, moveFrom, results[0], moveTo, results[2]));
+                    bot.say(to, sprintf('%s: Moved Đ%s from %s to %s', from, moveAmt, moveFrom, moveTo));
                 }
             });
         }
@@ -349,7 +349,7 @@ DogeTip.prototype.sendto = function(bot, to, from, args, callback) {
                 if (err) {
                     bot.say(to, sprintf('%s: Error sending doge', from));
                 } else {
-                    bot.say(to, sprintf('%s: Sent %s from %s to %s (tx:%s)', from, sendAmt, from, sendTo, result));
+                    bot.say(to, sprintf('%s: Sent Đ%s to %s (tx:%s)', from, sendAmt, sendTo, result));
                 }
             });
         }
