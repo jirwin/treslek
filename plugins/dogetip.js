@@ -189,6 +189,8 @@ DogeTip.prototype.getaddress = function(bot, to, from, args) {
         if (_.isUndefined(nick)) {
             nick = from;
         }
+    } else {
+        nick = from;
     }
 
     dogeClient.getaddress(nick, function (err, result) {
@@ -212,6 +214,8 @@ DogeTip.prototype.getbalance = function(bot, to, from, args) {
         if (_.isUndefined(nick)) {
             nick = from;
         }
+    } else {
+        nick = from;
     }
 
     dogeClient.getbalance(nick, function (err, result) {
