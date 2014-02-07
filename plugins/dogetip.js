@@ -250,7 +250,7 @@ DogeTip.prototype.ledger = function(bot, to, from, args) {
             if (err) {
                 bot.say(to, from + ": Such fuck.");
             } else {
-                msgOut = "Balances: ";
+                var msgOut = "Balances: ";
                 _.each(result, function (value, key) {
                     if (key !== '') {
                         msgOut += key + ":Đ" + value + " ";
