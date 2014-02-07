@@ -94,12 +94,12 @@ DogeClient.prototype.move = function (from, to, amount, callback) {
 
 /** Get dogecoind info */
 DogeClient.prototype.getinfo = function (callback) {
-    this.send('getinfo', null, callback);
+    this.send('getinfo', [], callback);
 };
 
 DogeClient.prototype.listaccounts = function(callback) {
-    this.send('listaccounts', null, callback);
-}
+    this.send('listaccounts', [], callback);
+};
 
 var DogeTip = function () {
     this.commands = ['dt'];
@@ -240,23 +240,27 @@ DogeTip.prototype.getbalance = function(bot, to, from, args) {
 
 /** Look up all user accounts */
 DogeTip.prototype.ledger = function(bot, to, from, args) {
-    var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
-    if (this.isAdmin(bot, from))
-    {
-       dogeClient.listaccounts(new function(err, result) {
-           if (err) {
-               bot.say(to, from + ": Such fuck.");
-           } else {
-               msgOut += "Balances: ";
-               keys = Object.keys(result);
 
-               keys.forEach(function (each) {
-                   msgOut += "\n" + each + ": " + result[each] + " ";
-               });
-           }
-       });
+    var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+
+    if (this._isAdmin(bot, from))
+    {
+        dogeClient.listaccounts(function(err, result) {
+
+            if (err) {
+                bot.say(to, from + ": Such fuck.");
+            } else {
+                msgOut = "Balances: ";
+                _.each(result, function (value, key) {
+                    if (key !== '') {
+                        msgOut += key + ":Đ" + value + " ";
+                    }
+                });
+                bot.say(to, msgOut);
+            }
+        });
     }
-}
+};
 
 /** Tip a nick */
 DogeTip.prototype.tip = function(bot, to, from, args) {
