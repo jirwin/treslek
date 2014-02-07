@@ -97,6 +97,10 @@ DogeClient.prototype.getinfo = function (callback) {
     this.send('getinfo', null, callback);
 };
 
+DogeClient.prototype.listaccounts = function(callback) {
+    this.send('listaccounts', null, callback);
+}
+
 var DogeTip = function () {
     this.commands = ['dt'];
     this.usage = {
@@ -129,6 +133,9 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
             break;
         case 'move':
             this.move(bot, to, from, args);
+            break;
+        case 'ledger':
+            this.ledger(bot, to, from, args);
             break;
         default:
             args.unshift(command);
@@ -230,6 +237,26 @@ DogeTip.prototype.getbalance = function(bot, to, from, args) {
     });
 
 };
+
+/** Look up all user accounts */
+DogeTip.prototype.ledger = function(bot, to, from, args) {
+    var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+    if (this.isAdmin(bot, from))
+    {
+       dogeClient.listaccounts(new function(err, result) {
+           if (err) {
+               bot.say(to, from + ": Such fuck.");
+           } else {
+               msgOut += "Balances: ";
+               keys = Object.keys(result);
+
+               keys.forEach(function (each) {
+                   msgOut += "\n" + each + ": " + result[each] + " ";
+               });
+           }
+       });
+    }
+}
 
 /** Tip a nick */
 DogeTip.prototype.tip = function(bot, to, from, args) {
