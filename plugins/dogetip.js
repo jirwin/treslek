@@ -131,7 +131,10 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
             this.move(bot, to, from, args);
             break;
         default:
-            bot.say(to, from + ': Very confuse with ' + command + '?');
+            args.unshift(command);
+            this.tip(bot, to, from, args);
+            break;
+//            bot.say(to, from + ': Very confuse with ' + command + '?');
 
     }
 
