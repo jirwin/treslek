@@ -22,7 +22,7 @@ DogeClient.prototype.send = function (command, params, callback) {
         responseBody;
 
     body = {
-        id: (new Date()).getTime().toString(),
+        id: Date.now().toString(),
         method: command,
         params: params
     };
@@ -44,12 +44,14 @@ DogeClient.prototype.send = function (command, params, callback) {
 
         if (error) {
             console.log('dogetip: request error - ', error);
-            return callback(error);
+            callback(error);
+            return;
         }
 
         if (response.statusCode !== 200) {
             console.log(body);
-            return callback('dogetip: unexpected status code - ', response.statusCode);
+            callback('dogetip: unexpected status code - ', response.statusCode);
+            return;
         }
 
         try {
@@ -58,14 +60,17 @@ DogeClient.prototype.send = function (command, params, callback) {
 
             if (body.error) {
                 console.log('dogetip: rpc error - ', body.error);
-                return callback(respnseBody.error);
+                callback(body.error);
+                return;
             } else {
                 console.log('dogetip: rpc response - ', body);
-                return callback(null, body.result);
+                callback(null, body.result);
+                return;
             }
         } catch(exception) {
             console.log('dogetip: rpc response parse error - ', exception);
-            return callback(exception);
+            callback(exception);
+            return;
         }
     });
 
@@ -155,7 +160,8 @@ DogeTip.prototype._inChannel = function(bot, nick, channel, callback) {
     bot.whois(nick, function (result) {
 
         if (!_.has(result, 'channels')) {
-            return callback(null, false);
+            callback(null, false);
+            return;
         }
 
         /** We have to strip the operator sign from the channel list */
@@ -167,9 +173,11 @@ DogeTip.prototype._inChannel = function(bot, nick, channel, callback) {
         });
 
         if (!_.isUndefined(found)) {
-            return callback(null, true);
+            callback(null, true);
+            return;
         } else {
-            return callback(null, false);
+            callback(null, false);
+            return;
         }
     });
 };
@@ -280,16 +288,17 @@ DogeTip.prototype.tip = function(bot, to, from, args) {
         if (!inChannel) {
             bot.say(to, from + ': ' + tipTo + ' must be in the channel');
         } else {
-            async.parallel([
-                   function(callback){ dogeClient.getaddress(from, callback); },
-                   function(callback){ dogeClient.getbalance(from, callback); },
-                   function(callback){ dogeClient.getaddress(tipTo, callback); }
-               ], function (err, results) {
+            async.parallel({
+                fromAddress: dogeClient.getaddress.bind(dogeClient, from),
+                fromBalance: dogeClient.getbalance.bind(dogeClient, from),
+                toAddress: dogeClient.getaddress.bind(dogeClient, tipTo)
+            }, function (err, results) {
                    if (err) {
                        console.log(err);
                        bot.say(to, sprintf('%s: Error fetching addresses.', from));
+                       return;
                    } else {
-                       if (results[1] - tipAmt < 0.0) {
+                       if (tipAmt > results.fromBalance) {
                            bot.say(to, sprintf('%s: Insufficient funds', from));
                            return;
                        }
@@ -327,16 +336,16 @@ DogeTip.prototype.move = function(bot, to, from, args) {
         return;
     }
 
-    async.parallel([
-        function(callback){ dogeClient.getaddress(moveFrom, callback); },
-        function(callback){ dogeClient.getbalance(moveFrom, callback); },
-        function(callback){ dogeClient.getaddress(moveTo, callback); }
-    ], function (err, results) {
+    async.parallel({
+        fromAddress: dogeClient.getaddress.bind(dogeClient, from),
+        fromBalance: dogeClient.getbalance.bind(dogeClient, from),
+        toAddress: dogeClient.getaddress.bind(dogeClient, tipTo)
+        }, function (err, results) {
         if (err) {
             console.log(err);
             bot.say(to, sprintf('%s: Error fetching addresses.', from));
         } else {
-            if (results[1] - moveAmt < 0.0) {
+            if (moveAmt > results.fromBalance) {
                 bot.say(to, sprintf('%s: Insufficient funds', from));
                 return;
             }
