@@ -23,9 +23,6 @@ function parseDate(dateString) {
       days = Math.ceil(date.diff(now, 'days', true)),
       standard = date.format('M-D-YYYY');
 
-  console.log(now, date);
-  console.log(days, date.diff(now, 'days', true));
-
   if (days === 0) {
     return sprintf('Today! (%s)', standard);
   } else if (days === 1) {

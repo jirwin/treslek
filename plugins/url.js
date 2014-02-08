@@ -3,6 +3,8 @@ var request = require('request');
 var cheerio = require('cheerio');
 var Bitly = require('bitly');
 
+var log = require('logmagic').local('treslek.plugins.url');
+
 /*
  * URL plugin
  *   - creates a hook that checks for urls. It then grabs the title
@@ -30,7 +32,7 @@ var shortenUrl = function(bitly, url, callback) {
 
   bitly.shorten(url, function(err, resp) {
     if (err) {
-      console.log('Error shortening url', {err: err, url: url});
+      log.error('Error shortening url', {err: err, url: url});
       callback(err);
       return;
     }
@@ -69,7 +71,7 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
           contentType;
 
       if (err || res.statusCode === 404) {
-        console.log('Error retrieving ' + url);
+        log.error('Error retrieving url', {url: url, err: err, statusCode: res.statusCode});
         callback();
         return;
       }

@@ -34,6 +34,10 @@ exports.conf = {
       treslek: '##treslek'
     }
   },
+  logstash: {
+    host: 'localhost',
+    port: 9999
+  },
   admins: ['jirwin', 'morgabra'],
   plugins_dir: path.resolve(__dirname, "plugins")
 }
