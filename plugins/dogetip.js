@@ -522,6 +522,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
       gBal: dogeClient.getbalance.bind(dogeClient, from)},
     function (err, result) {
       if (err) {
+        log.error('Error getting balances for gamble', {err: err});
         bot.say(to, "Many Dicks...");
       } else {
         var wager = args[0];
@@ -549,9 +550,11 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
         {
           dogeClient.move("treslek", from, amt, function(err2, result2) {
             if (err2) {
+              log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You won, but transfer failed. SUCH BAD LUCK");
               return;
             } else {
+              log.info("Gamble Won!" {user: from, amount: amt});
               bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
               return;
             }
@@ -559,9 +562,11 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
         } else {
           dogeClient.move("treslek", from, wager, function(err2, result2) {
             if (err2) {
+              log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
               return;
             } else {
+              log.info("Gamble Lost!" {user: from, amount: amt});
               bot.say(to, from + ": MANY FAIL!! You lose Đ" + wager);
               return;
             }
