@@ -75,6 +75,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
           options = [],
           match,
           matchedLog,
+          i,
           logs = results.getLogs;
 
       if (logs.length === 0) {
@@ -93,7 +94,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
 
       match = new RegExp(cmd.match, options.join(''));
 
-      for (var i = 0; i < logs.length - 1; i++) {
+      for (i = 0; i < logs.length - 1; i++) {
         if (logs[i].from === bot.config.nick) {
           continue;
         }

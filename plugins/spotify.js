@@ -28,7 +28,7 @@ Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
 
   async.forEach(matches, function(url, callback) {
     request(spotibase + url, function(err, res, body) {
-      var response, data;
+      var response, data, artistNames;
 
       if (err || res.statusCode === 404) {
         log.error('Error pulling from spotify', {err: err, statusCode: res.statusCode});
@@ -40,7 +40,7 @@ Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
         data = JSON.parse(body);
 
         if (data.info.type === 'track') {
-          var artistNames = [];
+          artistNames = [];
           data.track.artists.forEach(function(art) {
             artistNames.push(art.name);
           });

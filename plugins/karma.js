@@ -134,8 +134,8 @@ Karma.prototype.karma = function(bot, to, from, msg, callback) {
   }
 
   async.each(tokens, function (token, cb) {
-    var nick = token.substr(0, token.length - 2);
-    var incby = 0;
+    var nick = token.substr(0, token.length - 2),
+        incby = 0;
 
     if (nick === '') {
       cb(null);
