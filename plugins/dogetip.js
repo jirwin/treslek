@@ -515,13 +515,15 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 /** Gamble with doge */
 DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
-  var botName = bot.config.nick;
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    botName = bot.config.nick,
+    winning = false,
+    amt = 0;
 
   async.parallel({
       pot: dogeClient.getbalance.bind(dogeClient, botName),
-      gBal: dogeClient.getbalance.bind(dogeClient, from)},
-    function (err, result) {
+      gBal: dogeClient.getbalance.bind(dogeClient, from)
+    }, function (err, result) {
       if (err) {
         log.error('Error getting balances for gamble', {err: err});
         bot.say(to, "Many Dicks...");
@@ -545,8 +547,8 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
           return;
         }
 
-        var winning = Math.random() < Math.pow(Math.E, -(wager/pot)) / 2
-        var amt = wager * (3/4);
+        winning = Math.random() < Math.pow(Math.E, -(wager/result.pot)) / 2;
+        amt = wager * (3/4);
         if (winning)
         {
           dogeClient.move(botName, from, amt, function(err2, result2) {
@@ -555,7 +557,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
               bot.say(to, from + ": You won, but transfer failed. SUCH BAD LUCK");
               return;
             } else {
-              log.info("Gamble Won!" {user: from, amount: amt});
+              log.info("Gamble Won!", {user: from, amount: amt});
               bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
               return;
             }
@@ -567,7 +569,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
               return;
             } else {
-              log.info("Gamble Lost!" {user: from, amount: amt});
+              log.info("Gamble Lost!", {user: from, amount: amt});
               bot.say(to, from + ": MANY FAIL!! You lose Đ" + wager);
               return;
             }
