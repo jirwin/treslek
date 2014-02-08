@@ -49,7 +49,7 @@ DogeClient.prototype.send = function (command, params, callback) {
     }
 
     if (response.statusCode !== 200) {
-      log.error('dogtip unexpected status code', {body: body});
+      log.error('dogtip unexpected status code', {statusCode: response.statusCode});
       callback('dogetip: unexpected status code - ', response.statusCode);
       return;
     }
