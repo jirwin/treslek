@@ -48,6 +48,7 @@
     "lastsemic": true,
     "newcap": false,
     "maxlen": 120,
-    "indent": 2
+    "indent": 2,
+    "onevar": true
   }
 }
