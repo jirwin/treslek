@@ -17,6 +17,9 @@
     }
   ],
   "bin": "./bin/treselek.js",
+  "scripts": {
+    "lint": "make lint"
+  },
   "private": true,
   "dependencies": {
     "async": "0.2.x",
@@ -29,5 +32,20 @@
     "underscore": "1.4.x",
     "argsparser": "0.0.x",
     "moment": "~2.2.1"
+  },
+  "devDependencies": {
+    "jshint": "~2.4.3"
+  },
+  "jshintConfig": {
+    "boss":      true,
+    "node":      true,
+    "smarttabs": true,
+    "undef":     true,
+    "unused":    "vars",
+    "onecase":   true,
+    "lastsemic": true,
+    "newcap":    false,
+    "maxlen":    120,
+    "indent":    2
   }
 }

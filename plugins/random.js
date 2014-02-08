@@ -55,7 +55,7 @@ Random.prototype.dice = function(bot, to, from, msg, callback) {
     // default to a single six-sided die
     dice = [1, 6];
   } else if (dice.length !== 2 || isNaN(parseInt(dice[0])) || isNaN(parseInt(dice[1]))) {
-    bot.say(to, "Woops! I'm expecting <number of dice>d<number of sides>.")
+    bot.say(to, "Woops! I'm expecting <number of dice>d<number of sides>.");
     callback();
     return;
   }

@@ -17,7 +17,7 @@ var Isup = function() {
  * Isup command
  */
 Isup.prototype.isup = function(bot, to, from, msg, callback) {
-  var url, response;
+  var url;
 
   if (msg === '') {
     bot.say(to, 'I need a URL to check');
@@ -46,7 +46,7 @@ Isup.prototype.isup = function(bot, to, from, msg, callback) {
       bot.say(to, response);
       callback();
     }
-  })
+  });
 };
 
 

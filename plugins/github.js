@@ -10,8 +10,7 @@ Github.prototype.listen = function(bot) {
       pattern = [bot.redisConf.prefix, 'github/*'].join(':');
 
   redisClient.on('message', function(channel, message) {
-    var realChannel = channel.slice(bot.redisConf.prefix.length - 1).split('/'),
-        ircChannel = bot.config.github[realChannel];
+    var realChannel = channel.slice(bot.redisConf.prefix.length - 1).split('/');
 
     bot.say(realChannel, 'I got a message from github.');
   });

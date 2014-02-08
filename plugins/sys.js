@@ -13,7 +13,7 @@ var Sys = function() {
     uptime: 'ex: !uptime. Outputs the uptime.',
     figlet: 'ex: !figlet text. Generates a figlet of text.'
   };
-}
+};
 
 
 /*

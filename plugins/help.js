@@ -7,7 +7,8 @@ var async = require('async');
 var Help = function() {
   this.commands = ['help'];
   this.usage = {
-    help: 'Displays helpful information. With no arguments, it will display all available commands. Returns usage information for a given command if passed one e.g. !help help.'
+    help: ['Displays helpful information. With no arguments, it will display all available commands.',
+           'Returns usage information for a given command if passed one e.g. !help help.'].join(' ')
   };
 };
 

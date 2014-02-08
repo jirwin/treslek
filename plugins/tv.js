@@ -31,7 +31,7 @@ function parseDate(dateString) {
   } else if (days === 1) {
     return sprintf('Tomorrow! (%s)', standard);
   } else if (days === -1) {
-    return sprintf('Yesterday! (%s)', standard)
+    return sprintf('Yesterday! (%s)', standard);
   } else if (days < -1 && days >= -7) {
     return sprintf('Last %s (%s)', date.format('dddd'), standard);
   } else if (days <= 7 && days > 0) {
@@ -39,21 +39,21 @@ function parseDate(dateString) {
   }
 
   return standard;
-};
+}
 
 
 /*
  * Nextep command.
  */
 TV.prototype.nextep = function(bot, to, from, msg, callback) {
-  var msgOut = '',
-      intervalId, url;
+  var intervalId, url;
 
   url = sprintf('http://services.tvrage.com/tools/quickinfo.php?show=%s', encodeURIComponent(msg));
 
   request(url, function(err, res, body) {
     var epInfo = {},
-        date, epDetails;
+        outMsg = '',
+        epDetails;
 
     clearInterval(intervalId);
 
@@ -74,7 +74,7 @@ TV.prototype.nextep = function(bot, to, from, msg, callback) {
       return;
     }
 
-    if (epInfo['Status'] === 'Returning Series' ) {
+    if (epInfo.Status === 'Returning Series') {
       if (epInfo.hasOwnProperty('Next Episode')) {
         epDetails = epInfo['Next Episode'].split('^');
         outMsg = sprintf("%s's next episode '%s - %s' airs %s.",

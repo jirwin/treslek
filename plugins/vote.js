@@ -8,9 +8,10 @@ var sprintf = require('sprintf').sprintf;
 var Vote = function() {
   this.commands = ['vote', 'newvote'];
   this.usage = {
-    vote: 'Use with no arguments to show the current vote. Pass an argument to vote. Use !newvote to create a new vote.',
+    vote: ['Use with no arguments to show the current vote. Pass an argument to vote.',
+           'Use !newvote to create a new vote.'].join(','),
     newvote: 'ex: !newvote Favorite Color. Creates a new vote.'
-  }
+  };
 };
 
 
@@ -18,8 +19,7 @@ var Vote = function() {
  * vote command.
  */
 Vote.prototype.vote = function(bot, to, from, msg, callback) {
-  var rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
-      voteId;
+  var rc = redis.createClient(bot.redisConf.port, bot.redisConf.host);
 
   async.auto({
     voteId: function(callback) {
@@ -103,7 +103,7 @@ Vote.prototype.vote = function(bot, to, from, msg, callback) {
     }
 
     rc.quit();
-    callback()
+    callback();
   });
 };
 

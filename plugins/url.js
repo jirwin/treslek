@@ -63,7 +63,9 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
 
   async.forEach(matches, function(url, callback) {
     request(url, function(err, res, body) {
-      var response, parsed, shortUrl, title,
+      var response,
+          parsed,
+          title,
           contentType;
 
       if (err || res.statusCode === 404) {
