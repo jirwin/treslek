@@ -512,4 +512,63 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
   });
 };
 
+/** Gamble with doge */
+DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
+
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+
+  async.parallel({
+      pot: dogeClient.getbalance.bind(dogeClient, "treslek"),
+      gBal: dogeClient.getbalance.bind(dogeClient, from)},
+    function (err, result) {
+      if (err) {
+        bot.say(to, "Many Dicks...");
+      } else {
+        var wager = args[0];
+
+        if (isNaN(wager)) {
+          bot.say(to, from + ": Assholes don't wager DOGE");
+          return;
+        }
+
+        if (wager > result.pot)
+        {
+          bot.say(to, from + ": Assholes bet more than the pot");
+          return;
+        }
+
+        if (wager > result.gBal)
+        {
+          bot.say(to, from + ": Assholes wager more than they have");
+          return;
+        }
+
+        var winning = Math.random() < Math.pow(Math.E, -(wager/pot)) / 2
+        var amt = wager * (3/4);
+        if (winning)
+        {
+          dogeClient.move("treslek", from, amt, function(err2, result2) {
+            if (err2) {
+              bot.say(to, from + ": You won, but transfer failed. SUCH BAD LUCK");
+              return;
+            } else {
+              bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
+              return;
+            }
+          });
+        } else {
+          dogeClient.move("treslek", from, wager, function(err2, result2) {
+            if (err2) {
+              bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
+              return;
+            } else {
+              bot.say(to, from + ": MANY FAIL!! You lose Đ" + wager);
+              return;
+            }
+          });
+        }
+      }
+    });
+};
+
 exports.Plugin = DogeTip;
