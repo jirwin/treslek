@@ -31,21 +31,23 @@
     "sprintf": "0.1.x",
     "underscore": "1.4.x",
     "argsparser": "0.0.x",
-    "moment": "~2.2.1"
+    "moment": "~2.2.1",
+    "logmagic": "~0.1.4",
+    "logmagic-logstash": "0.0.2"
   },
   "devDependencies": {
     "jshint": "~2.4.3"
   },
   "jshintConfig": {
-    "boss":      true,
-    "node":      true,
+    "boss": true,
+    "node": true,
     "smarttabs": true,
-    "undef":     true,
-    "unused":    "vars",
-    "onecase":   true,
+    "undef": true,
+    "unused": "vars",
+    "onecase": true,
     "lastsemic": true,
-    "newcap":    false,
-    "maxlen":    120,
-    "indent":    2
+    "newcap": false,
+    "maxlen": 120,
+    "indent": 2
   }
 }

@@ -2,6 +2,8 @@ var async = require('async');
 var request = require('request');
 var sprintf = require('sprintf').sprintf;
 
+var log = require('logmagic').local('treslek.plugins.spotify');
+
 /*
  * Spotify Plugin
  *   - creates a hook that fetches information from spotify urls
@@ -29,7 +31,7 @@ Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
       var response, data;
 
       if (err || res.statusCode === 404) {
-        console.log('Error pulling from Spotify');
+        log.error('Error pulling from spotify', {err: err, statusCode: res.statusCode});
         callback();
         return;
       }

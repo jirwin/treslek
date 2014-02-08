@@ -3,6 +3,8 @@ var sprintf = require('sprintf').sprintf;
 var async = require('async');
 var _ = require('underscore');
 
+var log = require('logmagic').local('treslek.plugins.dogetip');
+
 /**
  * https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_Calls_list
  */
@@ -36,18 +38,18 @@ DogeClient.prototype.send = function (command, params, callback) {
     }
   };
 
-  console.log('dogetip: request - ', JSON.stringify(options));
+  log.info('dogetip request', {options: options});
 
   request(options, function (error, response, body) {
 
     if (error) {
-      console.log('dogetip: request error - ', error);
+      log.error('dogetip request error', {err: error});
       callback(error);
       return;
     }
 
     if (response.statusCode !== 200) {
-      console.log(body);
+      log.error('dogtip unexpected status code', {body: body});
       callback('dogetip: unexpected status code - ', response.statusCode);
       return;
     }
@@ -57,16 +59,16 @@ DogeClient.prototype.send = function (command, params, callback) {
       body = JSON.parse(body);
 
       if (body.error) {
-        console.log('dogetip: rpc error - ', body.error);
+        log.error('dogtip rpc error', {err: body.error});
         callback(body.error);
         return;
       } else {
-        console.log('dogetip: rpc response - ', body);
+        log.info('dogetip rpc response', {body: body});
         callback(null, body.result);
         return;
       }
     } catch (exception) {
-      console.log('dogetip: rpc response parse error - ', exception);
+      log.error('dogetip rpc response parse error', {err: exception});
       callback(exception);
       return;
     }
@@ -247,7 +249,7 @@ DogeTip.prototype.getaddress = function (bot, to, from, args) {
 
   dogeClient.getaddress(nick, function (err, result) {
     if (err) {
-      console.log(err);
+      log.error('Error fetching address', {err: err});
       bot.say(to, from + ": Error fetching address.");
     } else {
       bot.say(to, from + ": " + result);
@@ -401,7 +403,7 @@ DogeTip.prototype.tip = function (bot, to, from, args) {
         toAddress: dogeClient.getaddress.bind(dogeClient, tipTo)
       }, function (err, results) {
         if (err) {
-          console.log(err);
+          log.error('Error fetching addresses', {err: err});
           bot.say(to, sprintf('%s: Error fetching addresses.', from));
           return;
         } else {
@@ -449,7 +451,7 @@ DogeTip.prototype.move = function (bot, to, from, args) {
     toAddress: dogeClient.getaddress.bind(dogeClient, moveTo)
   }, function (err, results) {
     if (err) {
-      console.log(err);
+      log.error('Error fetching addresses', {err: err});
       bot.say(to, sprintf('%s: Error fetching addresses.', from));
     } else {
       if (moveAmt > results.fromBalance) {
@@ -491,7 +493,7 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
     }
   ], function (err, results) {
     if (err) {
-      console.log(err);
+      log.error('Error fetching addresses', {err: err});
       bot.say(to, sprintf('%s: Error fetching addresses.', from));
     } else {
       if (results[1] - (sendAmt + 1) < 0.0) {

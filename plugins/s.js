@@ -1,6 +1,8 @@
 var async = require('async');
 var sprintf = require('sprintf').sprintf;
 
+var log = require('logmagic').local('treslek.plugins.s');
+
 
 /*
  * Substitute command
@@ -29,7 +31,7 @@ function parseCommand(bot, to, text, callback) {
   cmd = text.split('/');
 
   if (cmd.length !== 4) {
-    console.log('Invalid s syntax.', text);
+    log.error('Invalid s syntax.', {text: text});
     callback(null, false);
     return;
   }

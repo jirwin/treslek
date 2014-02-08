@@ -2,6 +2,8 @@ var redis = require('redis');
 var async = require('async');
 var sprintf = require('sprintf').sprintf;
 
+var log = require('logmagic').local('treslek.plugins.vote');
+
 /*
  * Vote plugin.
  */
@@ -53,7 +55,7 @@ Vote.prototype.vote = function(bot, to, from, msg, callback) {
         var vote = false;
 
         if (results.hasVote && reply !== 'null') {
-          console.log('got reply');
+          log.info('Got vote reply.', {reply: reply});
           vote = reply;
         }
         callback(err, vote);

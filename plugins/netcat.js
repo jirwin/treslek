@@ -1,5 +1,7 @@
 var dgram = require('dgram');
 
+var log = require('logmagic').local('treslek.plugins.netcat');
+
 
 /**
  * Opens a socket and listens for commands via udp.
@@ -21,7 +23,7 @@ Netcat.prototype.listen = function(bot) {
       socket = dgram.createSocket('udp4');
 
   socket.on('listening', function() {
-    console.log('Listening on port ' + that.port);
+    log.info('Listening on port', {port: that.port});
   });
 
   socket.on('message', function(line) {
@@ -30,7 +32,7 @@ Netcat.prototype.listen = function(bot) {
         ii;
 
     if (injectInfo.length < 3) {
-      console.error('Not enough params to inject message: ' + line);
+      log.error('Not enough params to inject message', {line: line});
       return;
     }
 
