@@ -106,6 +106,10 @@ DogeClient.prototype.listaccounts = function (callback) {
   this.send('listaccounts', [], callback);
 };
 
+DogeClient.prototype.getinfo = function (callback) {
+  this.send('getinfo', [], callback);
+}
+
 var DogeTip = function () {
   this.commands = ['dt'];
   this.usage = {
@@ -143,6 +147,9 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
       break;
     case 'ledger':
       this.ledger(bot, to, from, args);
+      break;
+    case 'info':
+      this.info(bot, to, from, args);
       break;
     default:
       args.unshift(command);
@@ -270,6 +277,21 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
     });
   }
 };
+
+/** generic info about the chain */
+DogeTip.prototype.info = function(bot, to, from, args) {
+
+  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+
+  dogeClient.getinfo(function (err, result) {
+    if (err) {
+      bot.say(to, from + ": Many arses.");
+    } else {
+      var msgOut = sprintf("latest: %s diff: %s" , result.blocks, result.difficulty);
+      bot.say(to, from + ": " + msgOut);
+    }
+  });
+}
 
 /** Tip a nick */
 DogeTip.prototype.tip = function (bot, to, from, args) {
