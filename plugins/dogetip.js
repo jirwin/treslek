@@ -104,9 +104,33 @@ DogeClient.prototype.listaccounts = function (callback) {
   this.send('listaccounts', [], callback);
 };
 
+DogeClient.prototype.listtransactions = function(account, callback) {
+
+  var transactions = [];
+  var count = 100;
+  var from = 0;
+
+  var _fetch = function(err, response) {
+    if (err) {
+      return callback(err);
+    } else {
+      transactions = transactions.concat(response);
+      if (response.length === count) {
+        from += count;
+        this.send('listtransactions', [account, count, from], _fetch);
+      } else {
+        callback(null, transactions);
+      }
+    }
+  }.bind(this);
+
+  this.send('listtransactions', [account, count, from], _fetch);
+};
+
 DogeClient.prototype.getinfo = function (callback) {
   this.send('getinfo', [], callback);
-}
+};
+
 
 var DogeTip = function () {
   this.commands = ['dt'];
@@ -146,6 +170,9 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
     case 'ledger':
       this.ledger(bot, to, from, args);
       break;
+    case 'stats':
+      this.stats(bot, to, from, args);
+      break;
     case 'info':
       this.info(bot, to, from, args);
       break;
@@ -153,7 +180,6 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
       args.unshift(command);
       this.tip(bot, to, from, args);
       break;
-//            bot.say(to, from + ': Very confuse with ' + command + '?');
 
   }
 
@@ -277,10 +303,69 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
   }
 };
 
+/** Look up all user accounts */
+DogeTip.prototype.stats = function(bot, to, from, args) {
+
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+  var nick;
+
+  if (this._isAdmin(bot, from)) {
+    nick = args.shift();
+    if (_.isUndefined(nick)) {
+      nick = from;
+    }
+  } else {
+    nick = from;
+  }
+
+  dogeClient.listtransactions(nick, function(err, result) {
+
+    if (err) {
+      bot.say(to, from + ": Such fuck.");
+    } else {
+
+      /* Tips */
+      var tips = 0;
+      var tipped = 0;
+      var totalTips = 0.0;
+      var totalTipped = 0.0;
+
+      /* Send/Recv from addresses */
+      var sent = 0;
+      var received = 0;
+      var totalSent = 0.0;
+      var totalReceived = 0.0;
+
+      _.each(result, function (tx) {
+        if (tx.otheraccount !== nick) {
+          if (tx.category == "move") {
+            if (tx.amount > 0) {
+              tipped += 1;
+              totalTipped += tx.amount;
+            } else if (tx.amount < 0) {
+              tips += 1;
+              totalTips += Math.abs(tx.amount);
+            }
+          } else if (tx.category == "send") {
+            sent += 1;
+            totalSent += Math.abs(tx.amount);
+          } else if (tx.category == "receive") {
+            received += 1;
+            totalReceived += tx.amount;
+          }
+        }
+      });
+
+      var msg = '%s: sent: %s (Đ%.02f) - recv: %s (Đ%.02f) - avg sent: Đ%.02f';
+      bot.say(to, sprintf(msg, from, tips, totalTips, tipped, totalTipped, (totalTips / tips)));
+    }
+  });
+};
+
 /** generic info about the chain */
 DogeTip.prototype.info = function(bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   dogeClient.getinfo(function (err, result) {
     if (err) {
@@ -290,7 +375,7 @@ DogeTip.prototype.info = function(bot, to, from, args) {
       bot.say(to, from + ": " + msgOut);
     }
   });
-}
+};
 
 /** Tip a nick */
 DogeTip.prototype.tip = function (bot, to, from, args) {
