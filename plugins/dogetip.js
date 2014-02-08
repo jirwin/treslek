@@ -134,7 +134,7 @@ DogeClient.prototype.getinfo = function (callback) {
 
 
 var DogeTip = function () {
-  this.commands = ['dt'];
+  this.commands = ['dt', 'dtgamble'];
   this.usage = {
     dt: 'ex : !dt [tip <nick> <amt>] [sendto <address> <amd>] [address] [balance]'
   };
