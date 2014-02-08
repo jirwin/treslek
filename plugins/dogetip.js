@@ -516,9 +516,10 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
 
   var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+  var botName = bot.config.nick;
 
   async.parallel({
-      pot: dogeClient.getbalance.bind(dogeClient, "treslek"),
+      pot: dogeClient.getbalance.bind(dogeClient, botName),
       gBal: dogeClient.getbalance.bind(dogeClient, from)},
     function (err, result) {
       if (err) {
@@ -548,7 +549,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
         var amt = wager * (3/4);
         if (winning)
         {
-          dogeClient.move("treslek", from, amt, function(err2, result2) {
+          dogeClient.move(botName, from, amt, function(err2, result2) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You won, but transfer failed. SUCH BAD LUCK");
@@ -560,7 +561,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
             }
           });
         } else {
-          dogeClient.move("treslek", from, wager, function(err2, result2) {
+          dogeClient.move(botName, from, wager, function(err2, result2) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
