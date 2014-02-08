@@ -108,11 +108,10 @@ DogeClient.prototype.listaccounts = function (callback) {
 
 DogeClient.prototype.listtransactions = function(account, callback) {
 
-  var transactions = [];
-  var count = 100;
-  var from = 0;
-
-  var _fetch = function(err, response) {
+  var transactions = [],
+    count = 100,
+    from = 0,
+    _fetch = function(err, response) {
     if (err) {
       return callback(err);
     } else {
@@ -235,8 +234,8 @@ DogeTip.prototype._isValidAmount = function (amt) {
 /** Look up the tip wallet address for a nick */
 DogeTip.prototype.getaddress = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
-  var nick;
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    nick;
 
   if (this._isAdmin(bot, from)) {
     nick = args.shift();
@@ -260,8 +259,8 @@ DogeTip.prototype.getaddress = function (bot, to, from, args) {
 /** Look up the tip wallet balance for a nick */
 DogeTip.prototype.getbalance = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
-  var nick;
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    nick;
 
   if (this._isAdmin(bot, from)) {
     nick = args.shift();
@@ -308,8 +307,8 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
 /** Look up all user accounts */
 DogeTip.prototype.stats = function(bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
-  var nick;
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    nick;
 
   if (this._isAdmin(bot, from)) {
     nick = args.shift();
@@ -327,16 +326,16 @@ DogeTip.prototype.stats = function(bot, to, from, args) {
     } else {
 
       /* Tips */
-      var tips = 0;
-      var tipped = 0;
-      var totalTips = 0.0;
-      var totalTipped = 0.0;
+      var msg, tips = 0,
+        tipped = 0,
+        totalTips = 0.0,
+        totalTipped = 0.0,
 
       /* Send/Recv from addresses */
-      var sent = 0;
-      var received = 0;
-      var totalSent = 0.0;
-      var totalReceived = 0.0;
+        sent = 0,
+        received = 0,
+        totalSent = 0.0,
+        totalReceived = 0.0;
 
       _.each(result, function (tx) {
         if (tx.otheraccount !== nick) {
@@ -358,7 +357,7 @@ DogeTip.prototype.stats = function(bot, to, from, args) {
         }
       });
 
-      var msg = '%s: sent: %s (Đ%.02f) - recv: %s (Đ%.02f) - avg sent: Đ%.02f';
+      msg = '%s: sent: %s (Đ%.02f) - recv: %s (Đ%.02f) - avg sent: Đ%.02f';
       bot.say(to, sprintf(msg, from, tips, totalTips, tipped, totalTipped, (totalTips / tips)));
     }
   });
@@ -382,9 +381,9 @@ DogeTip.prototype.info = function(bot, to, from, args) {
 /** Tip a nick */
 DogeTip.prototype.tip = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    tipTo, tipAmt;
 
-  var tipTo, tipAmt;
   tipTo = args[0];
   tipAmt = parseFloat(args[1]);
 
@@ -428,14 +427,14 @@ DogeTip.prototype.tip = function (bot, to, from, args) {
 /** Admin only - move doge between accounts */
 DogeTip.prototype.move = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    moveFrom, moveTo, moveAmt;
 
   if (!this._isAdmin(bot, from)) {
     bot.say(to, from + ': You are not an admin');
     return;
   }
 
-  var moveFrom, moveTo, moveAmt;
   moveFrom = args[0];
   moveTo = args[1];
   moveAmt = parseFloat(args[2]);
@@ -473,9 +472,8 @@ DogeTip.prototype.move = function (bot, to, from, args) {
 /** Send doge to a nick's wallet */
 DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
-
-  var sendTo, sendAmt;
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
+    sendTo, sendAmt;
   sendTo = args[0];
   sendAmt = parseFloat(args[1]);
 
@@ -527,23 +525,28 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
       if (err) {
         log.error('Error getting balances for gamble', {err: err});
         bot.say(to, "Many Dicks...");
+        callback();
+        return;
       } else {
         var wager = args[0];
 
         if (isNaN(wager)) {
           bot.say(to, from + ": Assholes don't wager DOGE");
+          callback();
           return;
         }
 
         if (wager > result.pot)
         {
           bot.say(to, from + ": Assholes bet more than the pot");
+          callback();
           return;
         }
 
         if (wager > result.gBal)
         {
           bot.say(to, from + ": Assholes wager more than they have");
+          callback();
           return;
         }
 
@@ -555,10 +558,12 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You won, but transfer failed. SUCH BAD LUCK");
+              callback();
               return;
             } else {
               log.info("Gamble Won!", {user: from, amount: amt});
               bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
+              callback()
               return;
             }
           });
@@ -567,10 +572,12 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
+              callback();
               return;
             } else {
               log.info("Gamble Lost!", {user: from, amount: amt});
               bot.say(to, from + ": MANY FAIL!! You lose Đ" + wager);
+              callback();
               return;
             }
           });
