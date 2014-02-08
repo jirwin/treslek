@@ -19,7 +19,7 @@ var Substitute = function() {
 
 
 function parseCommand(bot, to, text, callback) {
-  var match, replacement, options, cmd;
+  var cmd;
 
   if (text.indexOf('!s') !== 0) {
     callback(null, false);
@@ -71,6 +71,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
     'matchLog': ['getLogs', function(callback, results) {
       var cmd = results.processCmd,
           options = [],
+          match,
           matchedLog,
           logs = results.getLogs;
 
@@ -102,7 +103,7 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
           matchedLog = logs[i];
           break;
         }
-      };
+      }
 
       if (!matchedLog) {
         bot.say(to, sprintf('No match found for %s.', cmd.match));

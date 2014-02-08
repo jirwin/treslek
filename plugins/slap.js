@@ -22,7 +22,7 @@ Slap.prototype.slap = function(bot, to, from, msg, callback) {
 
   bot.action(to, 'slaps ' + victim + ' with a large trout.');
   callback();
-}
+};
 
 
 exports.Plugin = Slap;

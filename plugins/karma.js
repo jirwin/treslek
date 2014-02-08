@@ -148,7 +148,7 @@ Karma.prototype.karma = function(bot, to, from, msg, callback) {
       incby = -1;
     }
 
-    if (incby == 0) {
+    if (incby === 0) {
       cb(null);
       return;
     }

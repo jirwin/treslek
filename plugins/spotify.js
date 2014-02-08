@@ -15,13 +15,13 @@ var Spotify = function() {
  * spotify hook.
  */
 Spotify.prototype.spotify = function(bot, to, from, msg, callback) {
-  var spotibase = 'http://ws.spotify.com/lookup/1/.json?uri=';
-      spotifyReg = /spotify:[a-z0-9:]+/gi, 
+  var spotibase = 'http://ws.spotify.com/lookup/1/.json?uri=',
+      spotifyReg = /spotify:[a-z0-9:]+/gi,
       matches = msg.match(spotifyReg);
 
   if (!matches) {
-      callback();
-      return;
+    callback();
+    return;
   }
 
   async.forEach(matches, function(url, callback) {

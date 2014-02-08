@@ -17,9 +17,7 @@ DogeClient.prototype.send = function (command, params, callback) {
   }
 
   var options = {},
-    body = {},
-    headers = {},
-    responseBody;
+    body = {};
 
   body = {
     id: Date.now().toString(),
@@ -108,26 +106,31 @@ DogeClient.prototype.listaccounts = function (callback) {
 
 DogeClient.prototype.listtransactions = function(account, callback) {
 
-    var transactions = [];
-    var count = 100;
-    var from = 0;
+  var transactions = [];
+  var count = 100;
+  var from = 0;
 
-    var _fetch = function(err, response) {
-        if (err) {
-            return callback(err);
-        } else {
-            transactions = transactions.concat(response);
-            if (response.length === count) {
-                from += count;
-                this.send('listtransactions', [account, count, from], _fetch);
-            } else {
-                callback(null, transactions);
-            }
-        }
-    }.bind(this);
+  var _fetch = function(err, response) {
+    if (err) {
+      return callback(err);
+    } else {
+      transactions = transactions.concat(response);
+      if (response.length === count) {
+        from += count;
+        this.send('listtransactions', [account, count, from], _fetch);
+      } else {
+        callback(null, transactions);
+      }
+    }
+  }.bind(this);
 
-    this.send('listtransactions', [account, count, from], _fetch);
+  this.send('listtransactions', [account, count, from], _fetch);
 };
+
+DogeClient.prototype.getinfo = function (callback) {
+  this.send('getinfo', [], callback);
+};
+
 
 var DogeTip = function () {
   this.commands = ['dt'];
@@ -170,6 +173,9 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
     case 'stats':
       this.stats(bot, to, from, args);
       break;
+    case 'info':
+      this.info(bot, to, from, args);
+      break;
     default:
       args.unshift(command);
       this.tip(bot, to, from, args);
@@ -185,6 +191,7 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
  */
 DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
   bot.whois(nick, function (result) {
+    var found = false;
 
     if (!_.has(result, 'channels')) {
       callback(null, false);
@@ -199,7 +206,7 @@ DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
       return c === channel;
     });
 
-    if (!_.isUndefined(found)) {
+    if (found) {
       callback(null, true);
       return;
     } else {
@@ -211,7 +218,7 @@ DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
 
 /** Check and see if a given nick is an admin. */
 DogeTip.prototype._isAdmin = function (bot, nick) {
-  return _.contains(bot.pluginsConf['dogetip']['admins'], nick);
+  return _.contains(bot.pluginsConf.dogetip.admins, nick);
 };
 
 /** Validate DOGE amount */
@@ -226,7 +233,7 @@ DogeTip.prototype._isValidAmount = function (amt) {
 /** Look up the tip wallet address for a nick */
 DogeTip.prototype.getaddress = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
   var nick;
 
   if (this._isAdmin(bot, from)) {
@@ -251,7 +258,7 @@ DogeTip.prototype.getaddress = function (bot, to, from, args) {
 /** Look up the tip wallet balance for a nick */
 DogeTip.prototype.getbalance = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
   var nick;
 
   if (this._isAdmin(bot, from)) {
@@ -276,7 +283,7 @@ DogeTip.prototype.getbalance = function (bot, to, from, args) {
 /** Look up all user accounts */
 DogeTip.prototype.ledger = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   if (this._isAdmin(bot, from)) {
     dogeClient.listaccounts(function (err, result) {
@@ -299,7 +306,7 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
 /** Look up all user accounts */
 DogeTip.prototype.stats = function(bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
   var nick;
 
   if (this._isAdmin(bot, from)) {
@@ -355,10 +362,25 @@ DogeTip.prototype.stats = function(bot, to, from, args) {
   });
 };
 
+/** generic info about the chain */
+DogeTip.prototype.info = function(bot, to, from, args) {
+
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
+
+  dogeClient.getinfo(function (err, result) {
+    if (err) {
+      bot.say(to, from + ": Many arses.");
+    } else {
+      var msgOut = sprintf("latest: %s diff: %s" , result.blocks, result.difficulty);
+      bot.say(to, from + ": " + msgOut);
+    }
+  });
+};
+
 /** Tip a nick */
 DogeTip.prototype.tip = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   var tipTo, tipAmt;
   tipTo = args[0];
@@ -404,7 +426,7 @@ DogeTip.prototype.tip = function (bot, to, from, args) {
 /** Admin only - move doge between accounts */
 DogeTip.prototype.move = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   if (!this._isAdmin(bot, from)) {
     bot.say(to, from + ': You are not an admin');
@@ -424,7 +446,7 @@ DogeTip.prototype.move = function (bot, to, from, args) {
   async.parallel({
     fromAddress: dogeClient.getaddress.bind(dogeClient, from),
     fromBalance: dogeClient.getbalance.bind(dogeClient, from),
-    toAddress: dogeClient.getaddress.bind(dogeClient, tipTo)
+    toAddress: dogeClient.getaddress.bind(dogeClient, moveTo)
   }, function (err, results) {
     if (err) {
       console.log(err);
@@ -449,7 +471,7 @@ DogeTip.prototype.move = function (bot, to, from, args) {
 /** Send doge to a nick's wallet */
 DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   var sendTo, sendAmt;
   sendTo = args[0];
