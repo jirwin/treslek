@@ -1,4 +1,6 @@
 lint:
 	node ./node_modules/jshint/bin/jshint bin lib plugins
 
-.PHONY: lint
+build: lint
+
+.PHONY: lint build
