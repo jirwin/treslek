@@ -17,9 +17,7 @@ DogeClient.prototype.send = function (command, params, callback) {
   }
 
   var options = {},
-    body = {},
-    headers = {},
-    responseBody;
+    body = {};
 
   body = {
     id: Date.now().toString(),
@@ -160,6 +158,7 @@ DogeTip.prototype.dt = function (bot, to, from, msg, callback) {
  */
 DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
   bot.whois(nick, function (result) {
+    var found = false;
 
     if (!_.has(result, 'channels')) {
       callback(null, false);
@@ -174,7 +173,7 @@ DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
       return c === channel;
     });
 
-    if (!_.isUndefined(found)) {
+    if (found) {
       callback(null, true);
       return;
     } else {
@@ -186,7 +185,7 @@ DogeTip.prototype._inChannel = function (bot, nick, channel, callback) {
 
 /** Check and see if a given nick is an admin. */
 DogeTip.prototype._isAdmin = function (bot, nick) {
-  return _.contains(bot.pluginsConf['dogetip']['admins'], nick);
+  return _.contains(bot.pluginsConf.dogetip.admins, nick);
 };
 
 /** Validate DOGE amount */
@@ -201,7 +200,7 @@ DogeTip.prototype._isValidAmount = function (amt) {
 /** Look up the tip wallet address for a nick */
 DogeTip.prototype.getaddress = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
   var nick;
 
   if (this._isAdmin(bot, from)) {
@@ -226,7 +225,7 @@ DogeTip.prototype.getaddress = function (bot, to, from, args) {
 /** Look up the tip wallet balance for a nick */
 DogeTip.prototype.getbalance = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
   var nick;
 
   if (this._isAdmin(bot, from)) {
@@ -251,7 +250,7 @@ DogeTip.prototype.getbalance = function (bot, to, from, args) {
 /** Look up all user accounts */
 DogeTip.prototype.ledger = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   if (this._isAdmin(bot, from)) {
     dogeClient.listaccounts(function (err, result) {
@@ -274,7 +273,7 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
 /** Tip a nick */
 DogeTip.prototype.tip = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   var tipTo, tipAmt;
   tipTo = args[0];
@@ -320,7 +319,7 @@ DogeTip.prototype.tip = function (bot, to, from, args) {
 /** Admin only - move doge between accounts */
 DogeTip.prototype.move = function (bot, to, from, args) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   if (!this._isAdmin(bot, from)) {
     bot.say(to, from + ': You are not an admin');
@@ -340,7 +339,7 @@ DogeTip.prototype.move = function (bot, to, from, args) {
   async.parallel({
     fromAddress: dogeClient.getaddress.bind(dogeClient, from),
     fromBalance: dogeClient.getbalance.bind(dogeClient, from),
-    toAddress: dogeClient.getaddress.bind(dogeClient, tipTo)
+    toAddress: dogeClient.getaddress.bind(dogeClient, moveTo)
   }, function (err, results) {
     if (err) {
       console.log(err);
@@ -365,7 +364,7 @@ DogeTip.prototype.move = function (bot, to, from, args) {
 /** Send doge to a nick's wallet */
 DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 
-  var dogeClient = new DogeClient(bot.pluginsConf['dogetip']);
+  var dogeClient = new DogeClient(bot.pluginsConf.dogetip);
 
   var sendTo, sendAmt;
   sendTo = args[0];
