@@ -514,9 +514,9 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
 
   var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
-    botName = bot.config.nick,
-    winning = false,
-    amt = 0;
+      botName = bot.config.nick,
+      winning = false,
+      amt = 0;
 
   async.parallel({
       pot: dogeClient.getbalance.bind(dogeClient, botName),
@@ -528,7 +528,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
         callback();
         return;
       } else {
-        var wager = args[0];
+        var wager = parseFloat(args[0]);
 
         if (isNaN(wager)) {
           bot.say(to, from + ": Assholes don't wager DOGE");
