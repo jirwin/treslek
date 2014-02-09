@@ -532,21 +532,28 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
         var wager = parseFloat(args);
 
         if (isNaN(wager)) {
-          bot.say(to, from + ": Assholes don't wager DOGE");
+          bot.say(to, from + ": You must set a wager.");
           callback();
           return;
         }
 
         if (wager > result.pot)
         {
-          bot.say(to, from + ": Assholes bet more than the pot");
+          bot.say(to, from + ": You cannot wager more than the pot");
           callback();
           return;
         }
 
         if (wager > result.gBal)
         {
-          bot.say(to, from + ": Assholes wager more than they have");
+          bot.say(to, from + ": You cannot wager more than you have");
+          callback();
+          return;
+        }
+
+        if (wager <= 0)
+        {
+          bot.say(to, from + ": Wager must be positive.");
           callback();
           return;
         }
@@ -564,12 +571,12 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
             } else {
               log.info("Gamble Won!", {user: from, amount: amt});
               bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
-              callback()
+              callback();
               return;
             }
           });
         } else {
-          dogeClient.move(botName, from, wager, function(err2, result2) {
+          dogeClient.move(from, botName, wager, function(err2, result2) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
