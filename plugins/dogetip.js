@@ -532,21 +532,28 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
         var wager = parseFloat(args);
 
         if (isNaN(wager)) {
-          bot.say(to, from + ": Assholes don't wager DOGE");
+          bot.say(to, from + ": You must set a wager.");
           callback();
           return;
         }
 
         if (wager > result.pot)
         {
-          bot.say(to, from + ": Assholes bet more than the pot");
+          bot.say(to, from + ": You cannot wager more than the pot");
           callback();
           return;
         }
 
         if (wager > result.gBal)
         {
-          bot.say(to, from + ": Assholes wager more than they have");
+          bot.say(to, from + ": You cannot wager more than you have");
+          callback();
+          return;
+        }
+
+        if (wager <= 0)
+        {
+          bot.say(to, from + ": Wager must be positive.")
           callback();
           return;
         }
