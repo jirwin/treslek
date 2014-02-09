@@ -569,7 +569,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
             }
           });
         } else {
-          dogeClient.move(botName, from, wager, function(err2, result2) {
+          dogeClient.move(from, botName, wager, function(err2, result2) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
               bot.say(to, from + ": You lost, but transfer failed. SUCH GOOD LUCK");
