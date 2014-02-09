@@ -511,12 +511,13 @@ DogeTip.prototype.sendto = function (bot, to, from, args, callback) {
 };
 
 /** Gamble with doge */
-DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
+DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
 
   var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
       botName = bot.config.nick,
       winning = false,
-      amt = 0;
+      amt = 0,
+      args = msg.split(" ");
 
   async.parallel({
       pot: dogeClient.getbalance.bind(dogeClient, botName),
@@ -528,7 +529,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, args, callback) {
         callback();
         return;
       } else {
-        var wager = parseFloat(args[0]);
+        var wager = parseFloat(args);
 
         if (isNaN(wager)) {
           bot.say(to, from + ": Assholes don't wager DOGE");
