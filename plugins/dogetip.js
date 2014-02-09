@@ -553,7 +553,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
 
         if (wager <= 0)
         {
-          bot.say(to, from + ": Wager must be positive.")
+          bot.say(to, from + ": Wager must be positive.");
           callback();
           return;
         }
@@ -571,7 +571,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
             } else {
               log.info("Gamble Won!", {user: from, amount: amt});
               bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
-              callback()
+              callback();
               return;
             }
           });
