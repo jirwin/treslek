@@ -558,7 +558,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
           return;
         }
 
-        winning = Math.random() < Math.pow(Math.E, -(wager/result.pot)) / 2;
+        winning = Math.random() < Math.pow(Math.E, -(wager/result.pot)) / 1.25;
         amt = wager * (3/4);
         if (winning)
         {
