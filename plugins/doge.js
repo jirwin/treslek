@@ -99,28 +99,6 @@ var CRYPTSY = function (callback) {
   });
 };
 
-var MTGOX = function (callback) {
-  var url = 'http://data.mtgox.com/api/2/BTCUSD/money/ticker_fast',
-      retObj = {},
-      data;
-
-  retObj.label = 'MtGox';
-
-  request(url, function(err, res, body) {
-    if (!body) {
-      retObj.value = 'such no body';
-    } else {
-      try {
-        data = JSON.parse(body);
-        retObj.value = data.data.sell.value;
-      } catch (exception) {
-        retObj.value = 'very confuse';
-      }
-    }
-    callback(null, retObj);
-  });
-};
-
 var COINBASE = function (callback) {
   var url = 'https://coinbase.com/api/v1/prices/sell',
       retObj = {},
@@ -162,7 +140,7 @@ DOGE.prototype.doge = function (bot, to, from, msg, callback) {
 
 DOGE.prototype.btc = function (bot, to, from, msg, callback) {
   var msgOut = '';
-  async.parallel([MTGOX, COINBASE], function(err, results) {
+  async.parallel([COINBASE], function(err, results) {
     msgOut += "BTC: ";
     results.forEach(function (each) {
       msgOut += each.label + ": " + each.value + " ";
