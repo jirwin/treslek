@@ -294,7 +294,7 @@ DogeTip.prototype.ledger = function (bot, to, from, args) {
       } else {
         var msgOut = "Balances: ";
         _.each(result, function (value, key) {
-          if (key !== '') {
+          if (key !== '' && value > 0) {
             msgOut += key + ":Đ" + value + " ";
           }
         });
