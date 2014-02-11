@@ -90,7 +90,7 @@ var CRYPTSY = function (callback) {
     } else {
       try {
         data = JSON.parse(body);
-        retObj.value = data.return.markets.DOGE.lasttradeprice * 100000000;
+        retObj.value = Math.round(data.return.markets.DOGE.lasttradeprice * 100000000);
       } catch (exception) {
         retObj.value = 'very confuse';
       }
