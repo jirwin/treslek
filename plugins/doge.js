@@ -16,121 +16,93 @@ var DOGE = function () {
 };
 
 
-/* Vicurex 1 / value
- * https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE
- *  1 / value
+var FETCH_PRICE = function(callback, name) {
+  var retObj = { label: name },
+      data;
+
+  retObj.symbol = PROVIDERS[name].symbol ? PROVIDERS[name].symbol : 'Ֆ';
+
+  request(PROVIDERS[name].url, function(err, res, body) {
+    if (!body) {
+      retObj.value = 'such no body';
+    } else {
+      try {
+        retObj.value = PROVIDERS[name].valueFunction(JSON.parse(body));
+      } catch (exception) {
+        retObj.value = 'very confuse';
+      }
+    }
+    callback(null, retObj);
+  });
+};
+
+/* 
+ * List of exchanges, with their respective URLs and JSON reading functions
  */
-var VICUREX = function (callback) {
-  var url = 'https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE',
-      retObj = {},
-      data;
-
-  retObj.label = 'Vicurex';
-
-  request(url, function(err, res, body) {
-    if (!body) {
-      retObj.value = 'such no body';
-    } else {
-      try {
-        data = JSON.parse(body);
-        retObj.value = Math.floor((1 / data.value) * 100000000);
-      } catch (exception) {
-        retObj.value = 'very confuse';
-      }
+var PROVIDERS = {
+  Vicurex: {
+    url: 'https://api.vircurex.com/api/get_last_trade.json?base=BTC&alt=DOGE',
+    valueFunction: function(data) {
+      return Math.floor((1 / data.value) * 100000000);
     }
-    callback(null, retObj);
-  });
-};
-
-/* Coinex
- * https://coinex.pw/api/v2/trade_pairs
- * need pair 46
- * last_price / 100000000
- */
-var COINEX = function (callback) {
-  var url = 'https://coinex.pw/api/v2/trade_pairs',
-      retObj = {},
-      data;
-
-  retObj.label = 'Coinex';
-
-  request(url, function(err, res, body) {
-    if (!body) {
-      retObj.value = 'such no body';
-    } else {
-      try {
-        data = JSON.parse(body);
-        data.trade_pairs.forEach(function(each) {
-          if (each.id === 46) {
-            retObj.value = each.last_price;
-          }
-        });
-      } catch (exception) {
-        retObj.value = 'very confuse';
-      }
+  },
+  CoinEx: {
+    url: 'https://coinex.pw/api/v2/trade_pairs',
+    valueFunction: function(data) {
+      var last_price;
+      data.trade_pairs.forEach(function(each) {
+        if (each.id === 46) {
+          last_price = each.last_price;
+        }
+      });
+      return last_price;
     }
-    callback(null, retObj);
-  });
-};
-
-/* Cryptsy
- * http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132
- *
- */
-var CRYPTSY = function (callback) {
-  var url = 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132',
-      retObj = {},
-      data;
-
-  retObj.label = 'Cryptsy';
-
-  request(url, function(err, res, body) {
-    if (!body) {
-      retObj.value = 'such no body';
-    } else {
-      try {
-        data = JSON.parse(body);
-        retObj.value = Math.round(data.return.markets.DOGE.lasttradeprice * 100000000);
-      } catch (exception) {
-        retObj.value = 'very confuse';
-      }
+  },
+  Cryptsy: {
+    url: 'http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132',
+    valueFunction: function(data) {
+      return Math.round(data.return.markets.DOGE.lasttradeprice * 100000000);
     }
-    callback(null, retObj);
-  });
-};
-
-var COINBASE = function (callback) {
-  var url = 'https://coinbase.com/api/v1/prices/sell',
-      retObj = {},
-      data;
-
-  retObj.label = 'Coinbase';
-
-  request(url, function(err, res, body) {
-    if (!body) {
-      retObj.value = 'such no body';
-    } else {
-      try {
-        data = JSON.parse(body);
-        retObj.value = data.amount;
-      } catch (exception) {
-        retObj.value = 'very confuse';
-      }
+  },
+  Coinbase: {
+    url: 'https://coinbase.com/api/v1/prices/sell',
+    valueFunction: function(data) {
+      return data.amount;
     }
-    callback(null, retObj);
-  });
-};
+  },
+  'Vault of Satoshi': {
+    url: 'https://api.vaultofsatoshi.com/public/ticker?order_currency=DOGE&payment_currency=USD',
+    valueFunction: function(data) {
+      return data.data.average_price.value;
+    },
+    symbol: '$'
+  }
+}
+
+var eachProvider = function(providers, callback) {
+  async.parallel(providers.map(function(name) {
+    return function(callback) {
+      FETCH_PRICE(callback, name);
+    }
+  }), callback);
+}
 
 /*
  * primary doge command
  */
-
 DOGE.prototype.doge = function (bot, to, from, msg, callback) {
-  var msgOut = '';
-  async.parallel([CRYPTSY, COINEX, VICUREX], function(err, results) {
+  var msgOut = '',
+      providers = [
+        'Cryptsy',
+        'CoinEx',
+        'Vicurex',
+        'Vault of Satoshi'
+      ];
+
+  eachProvider(providers, function(err, results) {
     msgOut += "DOGE: ";
     results.forEach(function (each) {
-      msgOut += each.label + ": " + each.value + " ";
+      msgOut += each.label + ": " + each.symbol + each.value + " ";
     });
 
     bot.say(to, msgOut);
@@ -140,7 +112,7 @@ DOGE.prototype.doge = function (bot, to, from, msg, callback) {
 
 DOGE.prototype.btc = function (bot, to, from, msg, callback) {
   var msgOut = '';
-  async.parallel([COINBASE], function(err, results) {
+  eachProvider(['Coinbase'], function(err, results) {
     msgOut += "BTC: ";
     results.forEach(function (each) {
       msgOut += each.label + ": " + each.value + " ";
@@ -157,16 +129,15 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
     amount = 1000,
     raw = msg.replace(',', '');
 
-  if ((raw !== '') && !isNaN(raw))
-  {
+  if ((raw !== '') && !isNaN(raw)) {
     amount = parseFloat(raw);
   }
 
-  async.parallel([CRYPTSY, COINBASE], function(err, results) {
+  eachProvider(['Vault of Satoshi'], function(err, results) {
     if (isNaN(results[0].value)) {
       msgOut = 'Cannot do conversion at this moment.';
     } else {
-      msgOut = 'Đ' + amount + ' is $' + ((amount * results[0].value) * results[1].value / 100000000).toFixed(2);
+      msgOut = 'Đ' + amount + ' is $' + (amount * results[0].value).toFixed(2);
     }
     bot.say(to, msgOut);
     callback();
