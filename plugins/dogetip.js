@@ -515,9 +515,10 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
 
   var dogeClient = new DogeClient(bot.pluginsConf.dogetip),
       botName = bot.config.nick,
-      winning = false,
       amt = 0,
-      args = msg.split(" ");
+      outMsg = '',
+      args = msg.split(" "),
+      roll;
 
   async.parallel({
       pot: dogeClient.getbalance.bind(dogeClient, botName),
@@ -558,10 +559,20 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
           return;
         }
 
-        winning = Math.random() < Math.pow(Math.E, -(wager/result.pot)) / 1.25;
-        amt = wager * (3/4);
-        if (winning)
-        {
+        roll = Math.floor(Math.random() * 100) + 1;
+
+        if (roll <= 60) {
+          amt = 0;
+          outMsg = from + ": MANY FAIL!! You rolled a " + roll + " and lose Đ" + wager + "!!";
+        } else if (roll > 60 && roll <= 95){
+          amt = wager * 2;
+          outMsg = from + ": SUCH LUCK!! You rolled a " + roll + " and win Đ" + amt + "!!";
+        } else {
+          amt = wager * 3;
+          outMsg = from + ": SUCH TRIPLE LUCK!! You rolled a " + roll + " and win Đ" + amt + "!!";
+        }
+
+        if (amt > 0) {
           dogeClient.move(botName, from, amt, function(err2, result2) {
             if (err2) {
               log.error("Error moving DOGE for gamble" , {err: err2});
@@ -570,7 +581,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
               return;
             } else {
               log.info("Gamble Won!", {user: from, amount: amt});
-              bot.say(to, from + ": SUCH LUCK!! You win Đ" + amt);
+              bot.say(to, outMsg);
               callback();
               return;
             }
@@ -584,7 +595,7 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
               return;
             } else {
               log.info("Gamble Lost!", {user: from, amount: amt});
-              bot.say(to, from + ": MANY FAIL!! You lose Đ" + wager);
+              bot.say(to, outMsg);
               callback();
               return;
             }
