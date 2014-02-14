@@ -539,7 +539,10 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
         }
 
         if (wager > (result.pot / 3)) { 
-          bot.say(to, from + ": You cannot wager more than one third of the pot: Đ" + (result.pot / 3).toFixed(2).toString());
+          bot.say(
+            to,
+            from + ": You cannot wager more than one third of the pot: Đ" + (result.pot / 3).toFixed(2).toString()
+          );
           callback();
           return;
         }
@@ -558,10 +561,10 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
 
         roll = Math.floor(Math.random() * 100) + 1;
 
-        if (roll <= 60) {
+        if (roll <= 70) {
           amt = 0;
           outMsg = from + ": MANY FAIL!! You rolled a " + roll + " and lose Đ" + wager + "!!";
-        } else if (roll > 60 && roll <= 95){
+        } else if (roll > 70 && roll <= 95){
           amt = wager * 2;
           outMsg = from + ": SUCH LUCK!! You rolled a " + roll + " and won Đ" + amt + "!!";
         } else {
