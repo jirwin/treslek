@@ -18,7 +18,8 @@
   ],
   "bin": "./bin/treselek.js",
   "scripts": {
-    "lint": "make lint"
+    "lint": "make lint",
+    "test": "make test"
   },
   "private": true,
   "dependencies": {
@@ -36,7 +37,8 @@
     "logmagic-logstash": "0.0.2"
   },
   "devDependencies": {
-    "jshint": "~2.4.3"
+    "jshint": "~2.4.3",
+    "jasmine-node": "~1.13.1"
   },
   "jshintConfig": {
     "boss": true,
