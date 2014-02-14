@@ -17,8 +17,7 @@ var DOGE = function () {
 
 
 var FETCH_PRICE = function(callback, name) {
-  var retObj = { label: name },
-      data;
+  var retObj = { label: name };
 
   retObj.symbol = PROVIDERS[name].symbol ? PROVIDERS[name].symbol : 'Ֆ';
 
@@ -77,27 +76,29 @@ var PROVIDERS = {
     },
     symbol: '$'
   }
-}
+};
 
 var eachProvider = function(providers, callback) {
   async.parallel(providers.map(function(name) {
     return function(callback) {
       FETCH_PRICE(callback, name);
-    }
+    };
   }), callback);
-}
+};
 
 /*
  * primary doge command
  */
 DOGE.prototype.doge = function (bot, to, from, msg, callback) {
   var msgOut = '',
-      providers = [
-        'Cryptsy',
-        'CoinEx',
-        'Vicurex',
-        'Vault of Satoshi'
-      ];
+      providers = [];
+
+  providers = [
+    'Cryptsy',
+    'CoinEx',
+    'Vicurex',
+    'Vault of Satoshi'
+  ];
 
   eachProvider(providers, function(err, results) {
     msgOut += "DOGE: ";
