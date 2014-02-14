@@ -136,7 +136,8 @@ DogeClient.prototype.getinfo = function (callback) {
 var DogeTip = function () {
   this.commands = ['dt', 'dtgamble'];
   this.usage = {
-    dt: 'ex : !dt [tip <nick> <amt>] [sendto <address> <amd>] [address] [balance]'
+    dt: 'ex : !dt [tip <nick> <amt>] [sendto <address> <amd>] [address] [balance]',
+    dtgamble: 'ex: !dtgamble <wager>. Rolls 1-100. 0-70 loses, 71-95 wins double, and 95-100 wins triple.'
   };
 };
 
