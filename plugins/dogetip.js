@@ -538,22 +538,19 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
           return;
         }
 
-        if (wager > result.pot)
-        {
-          bot.say(to, from + ": You cannot wager more than the pot");
+        if (wager > (result.pot / 3)) { 
+          bot.say(to, from + ": You cannot wager more than one third pot");
           callback();
           return;
         }
 
-        if (wager > result.gBal)
-        {
+        if (wager > result.gBal) {
           bot.say(to, from + ": You cannot wager more than you have");
           callback();
           return;
         }
 
-        if (wager <= 0)
-        {
+        if (wager <= 0) {
           bot.say(to, from + ": Wager must be positive.");
           callback();
           return;
@@ -566,10 +563,10 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
           outMsg = from + ": MANY FAIL!! You rolled a " + roll + " and lose Đ" + wager + "!!";
         } else if (roll > 60 && roll <= 95){
           amt = wager * 2;
-          outMsg = from + ": SUCH LUCK!! You rolled a " + roll + " and win Đ" + amt + "!!";
+          outMsg = from + ": SUCH LUCK!! You rolled a " + roll + " and won Đ" + amt + "!!";
         } else {
           amt = wager * 3;
-          outMsg = from + ": SUCH TRIPLE LUCK!! You rolled a " + roll + " and win Đ" + amt + "!!";
+          outMsg = from + ": SUCH TRIPLE LUCK!! You rolled a " + roll + " and won Đ" + amt + "!!";
         }
 
         if (amt > 0) {
