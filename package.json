@@ -19,6 +19,7 @@
   "bin": "./bin/treselek.js",
   "scripts": {
     "lint": "make lint",
+    "build": "make build",
     "test": "make test"
   },
   "private": true,
