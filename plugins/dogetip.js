@@ -539,10 +539,10 @@ DogeTip.prototype.dtgamble = function(bot, to, from, msg, callback) {
           return;
         }
 
-        if (wager > (result.pot * .33)) {
+        if (wager > (result.pot * 0.33)) {
           bot.say(
             to,
-            from + ": You cannot wager more than one third of the pot: Đ" + (result.pot * .33).toString()
+            from + ": You cannot wager more than one third of the pot: Đ" + (result.pot * 0.33).toString()
           );
           callback();
           return;
