@@ -7,11 +7,12 @@ var async = require('async');
  */
 
 var DOGE = function () {
-  this.commands = ['doge', 'btc', 'dc'];
+  this.commands = ['doge', 'btc', 'dc', 'bc'];
   this.usage = {
     doge: 'ex : !doge . Gets market prices for DOGE',
     btc: 'ex : !btc . Gets market prices for BTC',
-    dc: 'ex : !dc <amount>. Convert DOGE to USD, default 1000'
+    dc: 'ex : !dc <amount>. Convert DOGE to USD, default 1000',
+    bc: 'ex : !bc <amount>. Convert BTC to USD, default 1'
   };
 };
 
@@ -139,6 +140,27 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
       msgOut = 'Cannot do conversion at this moment.';
     } else {
       msgOut = 'Đ' + amount + ' is $' + (amount * results[0].value).toFixed(2);
+    }
+    bot.say(to, msgOut);
+    callback();
+  });
+};
+
+DOGE.prototype.bc = function (bot, to, from, msg, callback)
+{
+  var msgOut = '',
+    amount = 1000,
+    raw = msg.replace(',', '');
+
+  if ((raw !== '') && !isNaN(raw)) {
+    amount = parseFloat(raw);
+  }
+
+  eachProvider(['Coinbase'], function(err, results) {
+    if (isNaN(results[0].value)) {
+      msgOut = 'Cannot do conversion at this moment.';
+    } else {
+      msgOut = 'BTC' + amount + ' is $' + (amount * results[0].value).toFixed(2);
     }
     bot.say(to, msgOut);
     callback();
