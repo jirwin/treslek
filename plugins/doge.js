@@ -149,7 +149,7 @@ DOGE.prototype.dc = function (bot, to, from, msg, callback)
 DOGE.prototype.bc = function (bot, to, from, msg, callback)
 {
   var msgOut = '',
-    amount = 1000,
+    amount = 1,
     raw = msg.replace(',', '');
 
   if ((raw !== '') && !isNaN(raw)) {
