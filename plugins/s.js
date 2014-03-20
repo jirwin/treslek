@@ -92,7 +92,13 @@ Substitute.prototype.s = function(bot, to, from, msg, callback) {
         options.push('g');
       }
 
-      match = new RegExp(cmd.match, options.join(''));
+      try {
+        match = new RegExp(cmd.match, options.join(''));
+      } catch (e) {
+        bot.say(to, 'ESCAPE YOUR REGEX DOOD');
+        callback('Invalid regex');
+        return;
+      }
 
       for (i = 0; i < logs.length - 1; i++) {
         if (logs[i].from === bot.config.nick) {
