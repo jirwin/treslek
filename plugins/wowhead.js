@@ -14,19 +14,26 @@ function coloredNameForQuality(name, quality) {
     return name;
   };
 
-  switch (quality) {
-    case 5:
-      color = c.yellow
-      break;
-    case 4:
-      color = c.purple;
-      break;
-    case 3:
-      color = c.blue;
-      break;
-    case 2:
-      color = c.white.bold;
-      break;
+  if (quality === 'free') {
+    color = c.gray.bold
+  } else {
+    switch (quality) {
+      case 5:
+        color = c.yellow.bold
+        break;
+      case 4:
+        color = c.purple.bold;
+        break;
+      case 3:
+        color = c.blue.bold;
+        break;
+      case 2:
+        color = c.white.bold;
+        break;
+      default:
+        color = c.gray.bold;
+        break;
+    }
   }
 
   return color(name);
@@ -46,7 +53,7 @@ Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
     msg = sprintf('%s (%s)', coloredNameForQuality('[' + card.name + ']', card.quality), c.cyan(card.cost));
 
     if (card.attack && card.health) {
-      msg += sprintf(' %s/%s', c.green(card.attack), c.red(card.health));
+      msg += sprintf(' %s/%s', c.bold.green(card.attack), c.bold.red(card.health));
     }
 
     msg += sprintf(' - %s - %s', card.description, card.getLink());
