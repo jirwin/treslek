@@ -48,12 +48,16 @@ Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
   }
 
   function generateOutput(card) {
-    var msg = '';
+    var msg = '',
+        health;
 
     msg = sprintf('%s (%s)', coloredNameForQuality('[' + card.name + ']', card.quality), c.cyan(card.cost));
 
-    if (card.attack && card.health) {
-      msg += sprintf(' %s/%s', c.bold.green(card.attack), c.bold.red(card.health));
+
+    health = card.health || card.durability;
+
+    if (card.attack && health) {
+      msg += sprintf(' %s/%s', c.bold.green(card.attack), c.bold.red(health));
     }
 
     if (card.description) {
