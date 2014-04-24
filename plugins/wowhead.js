@@ -22,10 +22,10 @@ function coloredNameForQuality(name, quality) {
       color = c.purple;
       break;
     case 3:
-      color = c.navy;
+      color = c.blue;
       break;
     case 2:
-      color = c.white;
+      color = c.white.bold;
       break;
   }
 
@@ -43,10 +43,10 @@ Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
   function generateOutput(card) {
     var msg = '';
 
-    msg = sprintf('%s %s', coloredNameForQuality('[' + card.name + ']', card.quality), c.cyan(card.cost));
+    msg = sprintf('%s (%s)', coloredNameForQuality('[' + card.name + ']', card.quality), c.cyan(card.cost));
 
     if (card.attack && card.health) {
-      msg += sprintf('/%s/%s', c.green(card.attack), c.red(card.health));
+      msg += sprintf(' %s/%s', c.green(card.attack), c.red(card.health));
     }
 
     msg += sprintf(' - %s - %s', card.description, card.getLink());
