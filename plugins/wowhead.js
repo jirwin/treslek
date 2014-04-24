@@ -56,7 +56,11 @@ Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
       msg += sprintf(' %s/%s', c.bold.green(card.attack), c.bold.red(card.health));
     }
 
-    msg += sprintf(' - %s - %s', card.description, card.getLink());
+    if (card.description) {
+      msg += sprintf(' - %s', card.description);
+    }
+
+    msg += sprintf(' - %s', card.getLink());
 
     return msg;
   };
