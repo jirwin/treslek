@@ -26,11 +26,11 @@ Ass.prototype.ass = function(bot, to, from, msg, callback) {
 
   replacement = sprintf('%s ass-%s', matches[1], matches[2]);
 
-  newMsg = sprintf("%s%s%s", from.slice(0, matches.index),
+  newMsg = sprintf("%s%s%s", msg.slice(0, matches.index),
                              replacement,
-                             from.slice(matches.index + replacement.length));
+                             msg.slice(matches.index + replacement.length));
 
-  bot.say(to, sprintf('%s meant to say: %s', newMsg));
+  bot.say(to, sprintf('%s meant to say: %s', from, newMsg));
   callback();
 };
 
