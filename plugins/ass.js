@@ -1,6 +1,8 @@
 var sprintf = require('sprintf').sprintf
 
 
+var ASS_REGEX = /(\w+)-ass (\w+)/i;
+
 /*
  * Ass plugin
  *   - ass hook: https://xkcd.com/37
@@ -10,20 +12,25 @@ var Ass = function() {
 };
 
 
-var ASS_REGEX = /(\w+)-ass (\w+)/i;
-
 /*
  * Ass hook
  */
 Ass.prototype.ass = function(bot, to, from, msg, callback) {
-  var matches = msg.match(ASS_REGEX);
+  var matches = msg.match(ASS_REGEX),
+      replacement, newMsg;
 
   if (!matches) {
     callback();
     return;
   }
 
-  bot.say(to, sprintf('%s meant to say: %s ass-%s', from, matches[1], matches[2]));
+  replacement = sprintf('%s ass-%s', matches[1], matches[2]);
+
+  newMsg = sprintf("%s%s%s", from.slice(0, matches.index),
+                             replacement,
+                             from.slice(matches.index + replacement.length));
+
+  bot.say(to, sprintf('%s meant to say: %s', newMsg));
   callback();
 };
 
