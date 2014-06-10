@@ -15,11 +15,11 @@ function coloredNameForQuality(name, quality) {
   };
 
   if (quality === 'free') {
-    color = c.gray.bold
+    color = c.gray.bold;
   } else {
     switch (quality) {
       case 5:
-        color = c.yellow.bold
+        color = c.yellow.bold;
         break;
       case 4:
         color = c.purple.bold;
@@ -37,7 +37,7 @@ function coloredNameForQuality(name, quality) {
   }
 
   return color(name);
-};
+}
 
 Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
   var cards = msg.match(itemRegEx);
@@ -67,7 +67,7 @@ Wowhead.prototype.hearthstone = function(bot, to, from, msg, callback) {
     msg += sprintf(' - %s', card.getLink());
 
     return msg;
-  };
+  }
 
   async.map(cards, function(card, callback) {
     wowhead.getCard(card.slice(1, card.length - 1), callback);

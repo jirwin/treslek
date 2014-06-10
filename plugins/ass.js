@@ -1,4 +1,4 @@
-var sprintf = require('sprintf').sprintf
+var sprintf = require('sprintf').sprintf;
 
 
 var ASS_REGEX = /(\w+)-ass (\w+)/i;
