@@ -23,7 +23,7 @@ var Substitute = function() {
 function parseCommand(bot, to, text, callback) {
   var cmd;
 
-  if (text.indexOf('!s') !== 0) {
+  if (text.indexOf(bot.config.commandPrefix) !== 0) {
     callback(null, false);
     return;
   }
