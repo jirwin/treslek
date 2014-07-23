@@ -1,5 +1,5 @@
 var redis = require('redis');
-var sprintf = require('sprintf');
+var sprintf = require('sprintf').sprintf;
 var redisClient;
 
 var Github = function() {
