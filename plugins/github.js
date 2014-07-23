@@ -1,4 +1,5 @@
 var redis = require('redis');
+var sprintf = require('sprintf');
 var redisClient;
 
 var Github = function() {
@@ -7,8 +8,9 @@ var Github = function() {
 
 Github.prototype.listen = function(bot) {
   
-  redisClient = redis.createClient(bot.redisConf.port, bot.redisConf.host),
-      pattern = [bot.redisConf.prefix, 'github/*'].join(':');
+  redisClient = redis.createClient(bot.redisConf.port, bot.redisConf.host);
+
+  var pattern = [bot.redisConf.prefix, 'github/*'].join(':');
 
   redisClient.on("pmessage", function(pattern, channel, message) {
     var channelPath = channel.slice(bot.redisConf.prefix.length + 1).split('/')[1];
@@ -19,7 +21,8 @@ Github.prototype.listen = function(bot) {
     if (data) {
       if (data.action === "created") {
         if (data.comment) {
-          output = sprintf("New comment on PR: %s by %s \"%s\"", data.pull_request.html_url, data.comment.user.login, data.comment.body);
+          output = sprintf("New comment on PR: %s by %s \"%s\"", 
+			   data.pull_request.html_url, data.comment.user.login, data.comment.body);
         }
       } else if (data.action === "opened") {
         output = sprintf("New PR \"%s\" by %s at %s comment: %s",
