@@ -71,9 +71,15 @@ Url.prototype.url = function(bot, to, from, msg, callback) {
           contentType;
 
       if (err || res.statusCode === 404) {
-        log.error('Error retrieving url', {url: url, err: err, statusCode: res.statusCode});
-        callback();
-        return;
+        if (err) {
+          log.error('Error retrieving url', {url: url, err: err});
+          callback();
+          return;
+        } else {
+          log.error('Error retrieving url. Got response.', {url: url, err: err});
+          callback();
+          return;
+        }
       }
 
       if (res.statusCode === 200) {
