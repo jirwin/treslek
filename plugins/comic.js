@@ -135,13 +135,26 @@ Comic.prototype.comic = function(bot, to, from, msg, callback) {
     },
 
     logs: function(callback) {
-      bot.getLogs(to, comic.info.bubbles.length, null, function(err, logs) {
+      bot.getLogs(to, 100, null, function(err, logs) {
         if (err) {
           callback(err);
           return;
         }
-        logs = logs.reverse();
-        callback(null, logs);
+
+        var filteredLogs = [],
+            logCounter = 0,
+            lolRegex = /lol/g,
+            hahaRegex = /haha/g,
+            log;
+
+        while (filteredLogs.length < comic.info.bubbles.length) {
+          log = logs[logCounter].msg;
+          if (log.indexOf('!') === -1 && !lolRegex.test(log) && !hahaRegex.test(log)) {
+            filteredLogs.push(logs[logCounter]);
+          }
+          logCounter++;
+        }
+        callback(null, filteredLogs.reverse());
       });
     },
 
