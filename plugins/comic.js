@@ -64,15 +64,19 @@ function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
 
   lines.push(newLine);
 
+  if (lines.length === 1 && ctx.measureText(lines[0]).width > width) {
+    return textBoundingBox(ctx, text, x, y, width, height, fontSize - 1);
+  }
+
   lines.forEach(function(line) {
     var lineHeight = te.emHeightAscent + te.emHeightDescent;
     totalHeight += lineHeight
   });
 
 
-  if (totalHeight > height) {
+  if (totalHeight > height && lines.length !== 1) {
     textBoundingBox(ctx, text, x, y, width, height, fontSize - 1);
-  } else if (totalHeight <= height - fontHeight) {
+  } else if (totalHeight <= height - fontHeight && lines.length !== 1) {
     textBoundingBox(ctx, text, x, y, width, height, fontSize + 1);
   } else {
     lines.forEach(function(outLine) {
