@@ -19,6 +19,12 @@ exports.conf = {
     port: '6379',
     prefix: 'treslek'
   },
+  rackspace: {
+    user: '',
+    apiKey: '',
+    region: 'DFW',
+    container: 'treslek'
+  },
   topics: {
     separator: '::',
     prefixes: {
@@ -29,6 +35,10 @@ exports.conf = {
     host: '0.0.0.0',
     port: '1304',
     channelKey: 'webhookChannels'
+  },
+  comics: {
+    dir: path.resolve(__dirname, 'comics'),
+    domain: ''
   },
   github: {
     channels: {
