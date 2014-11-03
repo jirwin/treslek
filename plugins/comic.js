@@ -17,9 +17,10 @@ var comics = require('../comics/comics.json');
  *   - comic: Repeats whatever is passed with the command
  */
 var Comic = function() {
-  this.commands = ['comic'];
+  this.commands = ['comic', 'listcomics'];
   this.usage = {
-    comic: 'Creates a comic from recent chat. Optionally provide a comic template name to be used.'
+    comic: 'Creates a comic from recent chat. Optionally provide a comic template name to be used.',
+    listcomics: 'Lists the available comic templates.'
   };
 };
 
@@ -89,6 +90,13 @@ function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
     });
   }
 }
+
+/**
+ * List comics command.
+ */
+Comic.prototype.listcomics = function(bot, to, from, msg, callback) {
+  bot.say(to, 'Available comic templates: ' + Object.keys(comics).join(', '));
+};
 
 /*
  * Comic command.
