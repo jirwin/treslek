@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var crypto = require('crypto');
 
 var async = require('async');
 var Canvas = require('canvas');
@@ -24,7 +25,7 @@ var Comic = function() {
 
 function getRandomComic() {
   var comicNames = Object.keys(comics),
-      name = comicNames[_.random(comicNames.length - 1)];
+      name = comicNames[crypto.randomBytes(100)[0] % comicNames.length];
 
   return {
     name: name,
@@ -40,7 +41,7 @@ function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
       fontHeight = 0,
       totalHeight = 0,
       verticalSpace = 0,
-      fontX = x - 4,
+      fontX = x,
       fontY = 0,
       te;
 
@@ -50,13 +51,14 @@ function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
   verticalSpace = fontHeight * .9;
   fontY = y + fontHeight;
 
-  while(words.length > 0) {
-    te = ctx.measureText(newLine + ' ' + words[0]);
-    if (te.width > width) {
+  for (var ii = 0; ii < words.length; ii++) {
+    var testLine = newLine + words[ii] + ' ';
+    te = ctx.measureText(testLine);
+    if (te.width > width && ii > 0) {
       lines.push(newLine);
-      newLine = '';
+      newLine = words[ii] + ' ';
     } else {
-      newLine += ' ' + words.shift();
+      newLine = testLine;
     }
   }
 
@@ -110,7 +112,6 @@ Comic.prototype.comic = function(bot, to, from, msg, callback) {
           callback(err);
           return;
         }
-        console.dir(logs);
         logs = logs.reverse();
         callback(null, logs);
       });
@@ -118,14 +119,19 @@ Comic.prototype.comic = function(bot, to, from, msg, callback) {
 
     drawText: ['img', 'logs', function(callback, results) {
       var logs = results.logs;
-      _.each(comic.info.bubbles, function(bubble, i) {
-        textBoundingBox(ctx, logs[i].msg, bubble.x, bubble.y, bubble.width, bubble.height);
-      });
+      try {
+        _.each(comic.info.bubbles, function(bubble, i) {
+          textBoundingBox(ctx, logs[i].msg, bubble.x, bubble.y, bubble.width, bubble.height);
+        });
+      } catch (e) {
+        callback(e);
+        return;
+      }
       callback();
     }],
 
     upload: ['drawText', function(callback, results) {
-      var filename = 'comic-' + to.slice(1) + '-' + Date.now() + '.png',
+      var filename = 'comic-' + to.replace(/#/g, '') + '-' + Date.now() + '.png',
           file = canvas.pngStream(),
           fileOptions = {
             container: bot.config.rackspace.container,
@@ -152,10 +158,16 @@ Comic.prototype.comic = function(bot, to, from, msg, callback) {
         callback(null, uploadedFile.name);
       });
 
-      console.log('UPLOADING FILE');
+      console.log('UPLOADING FILE', filename);
       file.pipe(fileUpload);
     }]
   }, function(err, results) {
+    if (err) {
+      console.log('Error creating comic.', err);
+      bot.say(to, 'Error creating comic.');
+      callback();
+      return;
+    }
     bot.say(to, 'New comic uploaded at ' + bot.config.comics.domain + results.upload);
     callback();
   });
