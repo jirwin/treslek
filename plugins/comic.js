@@ -19,18 +19,22 @@ var comics = require('../comics/comics.json');
 var Comic = function() {
   this.commands = ['comic'];
   this.usage = {
-    comic: 'Creates a comic from recent chat'
+    comic: 'Creates a comic from recent chat. Optionally provide a comic template name to be used.'
   };
 };
+
+function getComic(name) {
+  return {
+    name: name,
+    info: comics[name]
+  };
+}
 
 function getRandomComic() {
   var comicNames = Object.keys(comics),
       name = comicNames[crypto.randomBytes(100)[0] % comicNames.length];
 
-  return {
-    name: name,
-    info: comics[name]
-  };
+  return getComic(name);
 }
 
 function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
@@ -90,11 +94,23 @@ function textBoundingBox(ctx, text, x, y, width, height, fontSize) {
  * Comic command.
  */
 Comic.prototype.comic = function(bot, to, from, msg, callback) {
-  var comic = getRandomComic(),
-      canvas = new Canvas(comic.info.width, comic.info.height),
-      ctx = canvas.getContext('2d'),
+  var canvas,
+      ctx,
       img = new Image,
       imgSrc;
+
+  if (msg) {
+    comic = getComic(msg);
+  } else {
+    comic = getRandomComic();
+  }
+
+  if (!comic.info) {
+    comic = getRandomComic();
+  }
+
+  canvas = new Canvas(comic.info.width, comic.info.height);
+  ctx = canvas.getContext('2d');
 
   async.auto({
     img: function(callback) {
