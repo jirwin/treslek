@@ -4,7 +4,7 @@ var path = require('path');
 var npm = require('npm');
 var async = require('async');
 
-var config = require('../conf.js').conf;
+var config = require('../conf.json');
 
 function main() {
   npm.load(null, function(err) {

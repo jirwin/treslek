@@ -5,7 +5,7 @@ var logstashSink = require('logmagic-logstash').LogstashSink;
 
 
 var treslek = require('../lib/treslek');
-var conf = require('../conf').conf;
+var conf = require('../conf.json');
 
 var logstash = new logstashSink('bubba', '162.209.99.44', 9999);
 
