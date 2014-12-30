@@ -3,8 +3,9 @@ var path = require('path');
 
 var npm = require('npm');
 var async = require('async');
+var argv = require('minimist')(process.argv.slice(2));
 
-var config = require('../conf.json');
+var config = require(argv._[0] || '../conf.json');
 
 function main() {
   npm.load(null, function(err) {
