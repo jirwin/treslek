@@ -28,10 +28,6 @@
     "port": "1304",
     "channelKey": "webhookChannels"
   },
-  "logstash": {
-    "host": "localhost",
-    "port": 9999
-  },
   "admins": ["jirwin", "morgabra"],
   "plugins": [],
   "plugins_dir": "/vagrant/plugins"
