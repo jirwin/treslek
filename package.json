@@ -29,6 +29,7 @@
     "async": "0.2.x",
     "cool-ascii-faces": "^1.3.3",
     "irc": "0.3.x",
+    "irc-colors": "^1.1.0",
     "logmagic": "~0.1.4",
     "minimist": "^1.1.0",
     "npm": "^2.1.7",
