@@ -1,4 +1,3 @@
-var redis = require('redis');
 var async = require('async');
 var sprintf = require('sprintf').sprintf;
 
@@ -22,7 +21,7 @@ var Karma = function() {
  */
 Karma.prototype.score = function(bot, to, from, msg, callback) {
   var nick,
-      rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
+      rc = bot.getRedisClient(),
       karmaStore = sprintf('%s:karma', bot.redisConf.prefix);
 
   if (msg === '') {
@@ -53,7 +52,7 @@ Karma.prototype.score = function(bot, to, from, msg, callback) {
  * return the top n scores
  */
 Karma.prototype.high = function(bot, to, from, msg, callback) {
-  var rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
+  var rc = bot.getRedisClient(),
       karmaStore = sprintf('%s:karma', bot.redisConf.prefix),
       tokens = msg.split(' '),
       count = parseInt(tokens[0]);
@@ -87,7 +86,7 @@ Karma.prototype.high = function(bot, to, from, msg, callback) {
  * return the low n scores
  */
 Karma.prototype.low = function(bot, to, from, msg, callback) {
-  var rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
+  var rc = bot.getRedisClient(),
       karmaStore = sprintf('%s:karma', bot.redisConf.prefix),
       tokens = msg.split(' '),
       count = parseInt(tokens[0]);
@@ -123,7 +122,7 @@ Karma.prototype.karma = function(bot, to, from, msg, callback) {
   var plus = /\+\+$/i,
       minus = /--$/i,
       cmd = /^!/i,
-      rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
+      rc = bot.getRedisClient(),
       karmaStore = bot.redisConf.prefix + ':karma',
       tokens = msg.split(' ');
 

@@ -1,4 +1,3 @@
-var redis = require('redis');
 var async = require('async');
 var sprintf = require('sprintf').sprintf;
 /*
@@ -26,7 +25,7 @@ Topic.prototype.topic = function(bot, to, from, msg, callback) {
       addTopic = args['--add'],
       appendTopic = args['--append'],
       topicCount = sprintf('%s:topics:id', bot.redisConf.prefix),
-      rc = redis.createClient(bot.redisConf.port, bot.redisConf.host),
+      rc = bot.getRedisClient(),
       topicPrefix = bot.config.topics.prefixes[to],
       separator = bot.config.topics.separator;
 
