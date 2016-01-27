@@ -1,5 +1,7 @@
 <a href="https://travis-ci.org/jirwin/treslek"><img src="https://travis-ci.org/jirwin/treslek.png" /></a>
 # treslek
+
+[![Join the chat at https://gitter.im/jirwin/treslek](https://badges.gitter.im/jirwin/treslek.svg)](https://gitter.im/jirwin/treslek?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A node irc bot made to replace doslek.
 
 ## Webhook Server
