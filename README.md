@@ -36,3 +36,5 @@ plugin to announce when Pull Requests have been opened.
 
 ## License
 treslek may be freely distributed under the MIT license.
+
+treslek <3 you
