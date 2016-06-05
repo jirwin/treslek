@@ -1,7 +1,7 @@
 {
   "name": "treslek",
   "description": "node.js irc bot",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "author": {
     "name": "Justin Gallardo <justin.gallardo@gmail.com>"
   },
