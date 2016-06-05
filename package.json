@@ -1,5 +1,5 @@
 {
-  "name": "treselek",
+  "name": "treslek",
   "description": "node.js irc bot",
   "version": "0.10.0",
   "author": {
@@ -23,7 +23,6 @@
     "test": "make test",
     "install-plugins": "node scripts/install_plugins.js"
   },
-  "private": true,
   "dependencies": {
     "argsparser": "0.0.x",
     "async": "0.2.x",
