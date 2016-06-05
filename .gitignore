@@ -2,3 +2,4 @@ conf.js
 conf.json
 *.swp
 node_modules/*
+.idea/

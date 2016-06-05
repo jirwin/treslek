@@ -2,9 +2,6 @@ var async = require('async');
 var sprintf = require('sprintf').sprintf;
 var moment = require('moment');
 
-var log = require('logmagic').local('treslek.plugins.seen');
-
-
 /*
  * Seen command
  *  - seen: Reports what the user was last seen saying
