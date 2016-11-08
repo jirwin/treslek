@@ -16,7 +16,7 @@
       "url": "https://raw.github.com/jirwin/treslek/master/LICENSE"
     }
   ],
-  "bin": "./bin/treselek.js",
+  "bin": "./bin/treslek.js",
   "scripts": {
     "lint": "make lint",
     "build": "make build",
