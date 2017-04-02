@@ -25,9 +25,8 @@ Markov.prototype.markov = function (bot, to, from, msg, callback) {
     var m = markov(2);
 
     m.seed(combinedLogs, function() {
-      bot.say(to, m.respond(msg).join(' '));
+      bot.say(to, nick + " says: " + m.respond(msg).join(' '));
       callback();
-      return;
     });
   })
 };
